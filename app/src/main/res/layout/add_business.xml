@@ -7,127 +7,116 @@
     android:background="@drawable/background_rounded"
     android:paddingTop="1dp">
 
-    <ImageView
-        android:id="@+id/menuButton"
-        android:layout_width="29dp"
-        android:layout_height="21dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/menu"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- 검색 바 -->
     <EditText
         android:id="@+id/searchBar"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/search_bar_background"
-        android:hint="  사업명을(를) 입력하세요"
+        android:layout_marginTop="20dp"
+        android:hint="사업명을(를) 입력하세요"
         android:padding="8dp"
-        android:textColorHint="#A0A0A0"
-        android:textSize="15sp"
-        app:layout_constraintTop_toBottomOf="@id/menuButton"
+        android:background="@android:drawable/editbox_background"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:inputType="text" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- 메뉴 버튼 -->
+    <ImageView
+        android:id="@+id/menuButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/searchBar"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <!-- 텍스트 박스 컨테이너 -->
+    <LinearLayout
         android:id="@+id/boxContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
+        android:orientation="vertical"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/box_background"
         app:layout_constraintTop_toBottomOf="@id/searchBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/buttonContainer">
 
         <!-- 텍스트 박스 1 -->
         <TextView
             android:id="@+id/textBox1"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/text_box_background"
-            android:padding="12dp"
-            android:text="텍스트 박스 1"
-            android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_marginBottom="10dp"
+            android:padding="16dp"
+            android:background="@android:drawable/editbox_background"
+            android:text="강화도 A 영향 평가"
+            android:textSize="16sp" />
 
         <!-- 텍스트 박스 2 -->
         <TextView
             android:id="@+id/textBox2"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/text_box_background"
-            android:padding="12dp"
-            android:text="텍스트 박스 2"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/textBox1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_marginBottom="10dp"
+            android:padding="16dp"
+            android:background="@android:drawable/editbox_background"
+            android:text="신안 T 영향 평가"
+            android:textSize="16sp" />
 
         <!-- 텍스트 박스 3 -->
         <TextView
             android:id="@+id/textBox3"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:padding="16dp"
+            android:background="@android:drawable/editbox_background"
+            android:text="신안 B 영향 평가"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- 버튼 컨테이너 -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 사업 추가 버튼 -->
+        <Button
+            android:id="@+id/addBusiness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="사업 추가"
+            android:textSize="16sp"
+            android:background="@android:color/holo_green_light"
+            app:layout_constraintWidth_percent="0.5"
+            android:textColor="@android:color/white" />
+
+        <!-- 사업 삭제 버튼 -->
+        <Button
+            android:id="@+id/removeBusiness"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/text_box_background"
-            android:padding="12dp"
-            android:text="텍스트 박스 3"
+            android:text="사업 삭제"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/textBox2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="@android:color/holo_red_light"
+            app:layout_constraintWidth_percent="0.5"
+            android:textColor="@android:color/white" />
 
-    <!-- 사업 추가 버튼 -->
-    <Button
-        android:id="@+id/addBusiness"
-        android:layout_width="168dp"
-        android:layout_height="43dp"
-        android:layout_marginBottom="76dp"
-        android:background="@drawable/login_button_background"
-        android:paddingTop="8dp"
-        android:text="추 가"
-        android:textAlignment="center"
-        android:textColor="#ffff"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <!-- 사업 삭제 버튼 -->
-    <Button
-        android:id="@+id/removeBusiness"
-        android:layout_width="168dp"
-        android:layout_height="43dp"
-        android:layout_marginBottom="76dp"
-        android:background="@drawable/login_button_background"
-        android:paddingTop="8dp"
-        android:text="삭 제"
-        android:textAlignment="center"
-        android:textColor="#ffff"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
