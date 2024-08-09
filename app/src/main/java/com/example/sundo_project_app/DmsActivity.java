@@ -3,6 +3,7 @@ package com.example.sundo_project_app;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -94,10 +95,12 @@ public class DmsActivity extends AppCompatActivity {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
+        Log.d("DmsActivity", "jsonData: " + jsonData); // jsonData 값을 로그로 출력
+
         executor.execute(() -> {
             String result = null;
             try {
-                URL url = new URL("http://localhost:8000/location"); // 변경된 URL
+                URL url = new URL("http://10.0.2.2:8000/location"); // 변경된 URL
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; utf-8");
