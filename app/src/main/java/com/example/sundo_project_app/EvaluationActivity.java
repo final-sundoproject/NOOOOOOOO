@@ -1,6 +1,7 @@
 package com.example.sundo_project_app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -15,10 +16,10 @@ public class EvaluationActivity extends AppCompatActivity {
 
     private SeekBar seekBar1, seekBar2, seekBar3, seekBar4;
     private Button btnSubmit;
-    private TextView textViewName, textViewObserver, textViewDate;
-    private NestedScrollView nestedScrollView; // Declare NestedScrollView
+    private TextView textViewName, textViewObserver;
+    private NestedScrollView nestedScrollView;
 
-    private String observerName = "김재엽";
+    private Log log;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,6 @@ public class EvaluationActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btn_submit);
         textViewName = findViewById(R.id.textViewName);
         textViewObserver = findViewById(R.id.textViewObserver);
-        textViewDate = findViewById(R.id.textViewDate);
         nestedScrollView = findViewById(R.id.nestedScrollView);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -51,8 +51,8 @@ public class EvaluationActivity extends AppCompatActivity {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("title", textViewName);
-            jsonObject.put("registrantName", textViewObserver);
+            jsonObject.put("title", textViewName.getText());
+            jsonObject.put("registrantName", textViewObserver.getText());
             jsonObject.put("arImage", "image_url.jpg");
             jsonObject.put("windVolume", score1);
             jsonObject.put("noiseLevel", score2);
@@ -60,6 +60,8 @@ public class EvaluationActivity extends AppCompatActivity {
             jsonObject.put("waterDepth", score4);
 
             String jsonString = jsonObject.toString();
+            log.d("TAG", jsonString);
+
 
             if (nestedScrollView != null) {
                 scrollToView(R.id.seekBar4);
