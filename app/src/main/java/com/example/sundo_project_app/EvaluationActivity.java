@@ -53,8 +53,8 @@ public class EvaluationActivity extends AppCompatActivity {
         try {
             jsonObject.put("title", textViewName);
             jsonObject.put("registrantName", textViewObserver);
-            jsonObject.put("arImage", textViewObserver);
-            jsonObject.put("windVolume", "image_url.jpg");
+            jsonObject.put("arImage", "image_url.jpg");
+            jsonObject.put("windVolume", score1);
             jsonObject.put("noiseLevel", score2);
             jsonObject.put("scenery", score3);
             jsonObject.put("waterDepth", score4);
