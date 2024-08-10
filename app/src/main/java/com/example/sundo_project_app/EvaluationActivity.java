@@ -1,15 +1,25 @@
 package com.example.sundo_project_app;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView; // Import NestedScrollView
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class EvaluationActivity extends AppCompatActivity {
@@ -60,7 +70,7 @@ public class EvaluationActivity extends AppCompatActivity {
             jsonObject.put("waterDepth", score4);
 
             String jsonString = jsonObject.toString();
-            log.d("TAG", jsonString);
+            sendCoordinates(jsonString);
 
 
             if (nestedScrollView != null) {
@@ -90,5 +100,43 @@ public class EvaluationActivity extends AppCompatActivity {
         seekBar2.setProgress(0);
         seekBar3.setProgress(0);
         seekBar4.setProgress(0);
+    }
+
+
+    private void sendCoordinates(String jsonData) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+            String result = null;
+            try {
+                URL url = new URL("http://10.0.2.2:8000/evaluation");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json; utf-8");
+                connection.setDoOutput(true);
+
+                // 데이터 전송
+                try (OutputStream os = connection.getOutputStream()) {
+                    byte[] input = jsonData.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    result = "좌표가 성공적으로 전송되었습니다.";
+                } else {
+                    result = "서버 오류가 발생했습니다. 응답 코드: " + responseCode;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                result = "전송 중 오류가 발생했습니다: " + e.getMessage(); // 오류 메시지 포함
+            }
+
+            // 메인 스레드에서 UI 업데이트
+            String finalResult = result;
+            handler.post(() -> Toast.makeText(EvaluationActivity.this, finalResult, Toast.LENGTH_LONG).show());
+        });
     }
 }
