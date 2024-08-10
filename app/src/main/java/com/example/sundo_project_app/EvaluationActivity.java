@@ -68,13 +68,6 @@ public class EvaluationActivity extends AppCompatActivity {
 
             String jsonString = jsonObject.toString();
 
-            String encodedJson = Base64.encodeToString(jsonString.getBytes(), Base64.DEFAULT);
-            Log.d("EvaluationActivity", "Encoded JSON Data: " + encodedJson);
-
-            byte[] decodedBytes = Base64.decode(encodedJson, Base64.DEFAULT);
-            String decodedJson = new String(decodedBytes);
-            Log.d("EvaluationActivity", "Decoded JSON Data: " + decodedJson);
-
 
             if (nestedScrollView != null) {
                 scrollToView(R.id.seekBar4);
