@@ -1,8 +1,6 @@
 package com.example.sundo_project_app;
 
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -11,9 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView; // Import NestedScrollView
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+
 
 public class EvaluationActivity extends AppCompatActivity {
 
@@ -39,10 +35,6 @@ public class EvaluationActivity extends AppCompatActivity {
         textViewDate = findViewById(R.id.textViewDate);
         nestedScrollView = findViewById(R.id.nestedScrollView);
 
-        textViewName.setText("명칭: 강화도 A 영향 평가 3KM");
-        textViewObserver.setText("관찰자명: " + observerName);
-        textViewDate.setText("등록일자: " + getCurrentDate());
-
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,15 +51,15 @@ public class EvaluationActivity extends AppCompatActivity {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("evaluation1", score1);
-            jsonObject.put("evaluation2", score2);
-            jsonObject.put("evaluation3", score3);
-            jsonObject.put("evaluation4", score4);
-            jsonObject.put("observerName", observerName);
-            jsonObject.put("date", getCurrentDate());
+            jsonObject.put("title", textViewName);
+            jsonObject.put("registrantName", textViewObserver);
+            jsonObject.put("arImage", textViewObserver);
+            jsonObject.put("windVolume", "image_url.jpg");
+            jsonObject.put("noiseLevel", score2);
+            jsonObject.put("scenery", score3);
+            jsonObject.put("waterDepth", score4);
 
             String jsonString = jsonObject.toString();
-
 
             if (nestedScrollView != null) {
                 scrollToView(R.id.seekBar4);
@@ -89,11 +81,6 @@ public class EvaluationActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    private String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 M월 d일 a hh시 mm분", Locale.getDefault());
-        return sdf.format(new Date());
     }
 
     private void resetUI() {
