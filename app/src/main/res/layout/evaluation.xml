@@ -96,7 +96,7 @@
                     android:id="@+id/textViewLabel1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="평가 1"
+                    android:text="풍속"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -189,7 +189,7 @@
                     android:id="@+id/textViewLabel2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="평가 2"
+                    android:text="수심"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -282,7 +282,7 @@
                     android:id="@+id/textViewLabel3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="평가 3"
+                    android:text="가시성"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -375,7 +375,7 @@
                     android:id="@+id/textViewLabel4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="평가 4"
+                    android:text="수심"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
