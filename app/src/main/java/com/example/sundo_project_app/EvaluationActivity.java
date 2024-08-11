@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 public class EvaluationActivity extends AppCompatActivity {
 
     private SeekBar seekBar1, seekBar2, seekBar3, seekBar4;
