@@ -72,12 +72,12 @@ public class EvaluationDialogFragment extends DialogFragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             Evaluation evaluation = new Evaluation();
-                            evaluation.setTitle(jsonObject.getString("평가명"));
-                            evaluation.setRegistrantName(jsonObject.getString("등록자명"));
-                            evaluation.setWindVolume(jsonObject.getInt("풍속"));
-                            evaluation.setNoiseLevel(jsonObject.getInt("소음"));
-                            evaluation.setScenery(jsonObject.getInt("가시성"));
-                            evaluation.setWaterDepth(jsonObject.getInt("수심"));
+                            evaluation.setTitle(jsonObject.getString("title"));
+                            evaluation.setRegistrantName(jsonObject.getString("registrantName"));
+                            evaluation.setWindVolume(jsonObject.getInt("windVolume"));
+                            evaluation.setNoiseLevel(jsonObject.getInt("noiseLevel"));
+                            evaluation.setScenery(jsonObject.getInt("scenery"));
+                            evaluation.setWaterDepth(jsonObject.getInt("waterDepth"));
 
                             evaluationList.add(evaluation);
                         }
