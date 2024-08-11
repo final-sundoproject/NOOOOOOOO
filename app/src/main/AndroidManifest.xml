@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,15 +13,42 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sundo_project_app"
-        android:networkSecurityConfig="@xml/network_security_config"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".EvaluationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".DmsActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,41 +57,19 @@
             android:name=".AddbusinessActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.ACTION_ADD_BUSINESS" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".GeneratorActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.LOGIN_ACTION" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".DmsActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.DMS_ACTION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".EvaluationActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.EVALUATION_ACTION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-
-
-
 
     </application>
 

@@ -1,5 +1,6 @@
 package com.example.sundo_project_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,6 +26,9 @@ public class DmsActivity extends AppCompatActivity {
     private EditText etLatitudeDegrees, etLatitudeMinutes, etLatitudeSeconds, etLatitudeDirection;
     private EditText etLongitudeDegrees, etLongitudeMinutes, etLongitudeSeconds, etLongitudeDirection;
     private Button btnSubmit;
+
+    // locationId 변수를 멤버 변수로 선언
+    private String locationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +120,14 @@ public class DmsActivity extends AppCompatActivity {
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
+                    // 서버에서 locationId를 응답으로 받기
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder responseBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        responseBuilder.append(line);
+                    }
+                    locationId = responseBuilder.toString(); // 응답에서 locationId 가져오기
                     result = "좌표가 성공적으로 전송되었습니다.";
                 } else {
                     result = "서버 오류가 발생했습니다. 응답 코드: " + responseCode;
@@ -126,8 +140,16 @@ public class DmsActivity extends AppCompatActivity {
 
             // 메인 스레드에서 UI 업데이트
             String finalResult = result;
-            handler.post(() -> Toast.makeText(DmsActivity.this, finalResult, Toast.LENGTH_LONG).show());
+            handler.post(() -> {
+                Toast.makeText(DmsActivity.this, finalResult, Toast.LENGTH_LONG).show();
+                // 좌표 등록이 완료되면 GeneratorActivity로 이동
+                if (locationId != null) {
+                    Intent intent = new Intent(DmsActivity.this, GeneratorActivity.class);
+                    intent.putExtra("locationId", locationId); // locationId를 전달
+                    startActivity(intent);
+                    Log.d("locationId", "locationId: " + locationId); // jsonData 값을 로그로 출력
+                }
+            });
         });
     }
-
 }
