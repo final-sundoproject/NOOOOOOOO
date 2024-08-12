@@ -2,6 +2,8 @@ package com.example.sundo_project_app;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -57,6 +59,25 @@ public class AddbusinessActivity extends AppCompatActivity {
 
         addProjectButton.setOnClickListener(v -> showAddProjectDialog());
         deleteProjectButton.setOnClickListener(v -> deleteSelectedProjects());
+
+        // 검색 기능 추가
+        EditText searchBar = findViewById(R.id.searchBar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                projectAdapter.filter(s.toString()); // 텍스트 변경 시 필터링 수행
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Do nothing
+            }
+        });
     }
 
     private void loadProjects() {
@@ -66,7 +87,7 @@ public class AddbusinessActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     projectList.clear();
                     projectList.addAll(response.body());
-                    projectAdapter.notifyDataSetChanged();
+                    projectAdapter.updateProjectList(projectList);  // 초기 데이터 로드 시 전체 리스트 표시
                 } else {
                     Toast.makeText(AddbusinessActivity.this, "No projects found", Toast.LENGTH_SHORT).show();
                 }
@@ -109,7 +130,7 @@ public class AddbusinessActivity extends AppCompatActivity {
             public void onResponse(Call<Project> call, Response<Project> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     projectList.add(response.body());
-                    projectAdapter.notifyDataSetChanged();
+                    projectAdapter.updateProjectList(projectList);
                     Toast.makeText(AddbusinessActivity.this, "Project added", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AddbusinessActivity.this, "Failed to add project", Toast.LENGTH_SHORT).show();
@@ -146,7 +167,7 @@ public class AddbusinessActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     projectList.removeIf(project -> project.getProjectId() == projectId);
-                    projectAdapter.notifyDataSetChanged();
+                    projectAdapter.updateProjectList(projectList);
                     Toast.makeText(AddbusinessActivity.this, "Project deleted", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AddbusinessActivity.this, "Failed to delete project", Toast.LENGTH_SHORT).show();
