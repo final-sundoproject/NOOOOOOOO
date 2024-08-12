@@ -3,9 +3,14 @@ package com.example.sundo_project_app;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
+import java.text.BreakIterator;
 import java.util.List;
 
 public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.EvaluationViewHolder> {
@@ -27,12 +32,14 @@ public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.Ev
     @Override
     public void onBindViewHolder(@NonNull EvaluationViewHolder holder, int position) {
         Evaluation evaluation = evaluationList.get(position);
-        holder.titleTextView.setText("Title: " + evaluation.getTitle());
-        holder.registrantNameTextView.setText("Registrant: " + evaluation.getRegistrantName());
-        holder.windVolumeTextView.setText("Wind Volume: " + evaluation.getWindVolume());
-        holder.noiseLevelTextView.setText("Noise Level: " + evaluation.getNoiseLevel());
-        holder.sceneryTextView.setText("Scenery: " + evaluation.getScenery());
-        holder.waterDepthTextView.setText("Water Depth: " + evaluation.getWaterDepth());
+
+        Glide.with(holder.itemView.getContext())
+                .load(evaluation.getArImage())
+                .into(holder.arImage);
+
+        holder.titleTextView.setText("평가명: " + evaluation.getTitle());
+        holder.registrantNameTextView.setText("등록자명: " + evaluation.getRegistrantName());
+        holder.averageRatingTextView.setText("평점: " + evaluation.getAverageRating());
     }
 
     @Override
@@ -41,21 +48,19 @@ public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.Ev
     }
 
     static class EvaluationViewHolder extends RecyclerView.ViewHolder {
+        ImageView arImage;
         TextView titleTextView;
         TextView registrantNameTextView;
-        TextView windVolumeTextView;
-        TextView noiseLevelTextView;
-        TextView sceneryTextView;
-        TextView waterDepthTextView;
+        TextView averageRatingTextView;
+
+
 
         public EvaluationViewHolder(@NonNull View itemView) {
             super(itemView);
+            arImage = itemView.findViewById(R.id.arImage);
             titleTextView = itemView.findViewById(R.id.textViewTitle);
             registrantNameTextView = itemView.findViewById(R.id.textViewRegistrantName);
-            windVolumeTextView = itemView.findViewById(R.id.textViewWindVolume);
-            noiseLevelTextView = itemView.findViewById(R.id.textViewNoiseLevel);
-            sceneryTextView = itemView.findViewById(R.id.textViewScenery);
-            waterDepthTextView = itemView.findViewById(R.id.textViewWaterDepth);
+            averageRatingTextView = itemView.findViewById(R.id.textViewAverage);
         }
     }
 }

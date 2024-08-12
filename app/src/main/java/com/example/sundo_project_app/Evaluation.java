@@ -4,10 +4,8 @@ package com.example.sundo_project_app;
 public class Evaluation {
     private String title;
     private String registrantName;
-    private int windVolume;
-    private int noiseLevel;
-    private int scenery;
-    private int waterDepth;
+    private String arImage;
+    private int averageRating;
 
     // Getters and Setters
     public String getTitle() {
@@ -26,35 +24,15 @@ public class Evaluation {
         this.registrantName = registrantName;
     }
 
-    public int getWindVolume() {
-        return windVolume;
+    public String getArImage() {
+        return arImage;
     }
 
-    public void setWindVolume(int windVolume) {
-        this.windVolume = windVolume;
+    public void setArImage(String arImage) {
+        this.arImage = arImage;
     }
 
-    public int getNoiseLevel() {
-        return noiseLevel;
-    }
+    public int getAverageRating (){return averageRating;}
+    public void setAverageRating (int averageRating){this.averageRating = averageRating;}
 
-    public void setNoiseLevel(int noiseLevel) {
-        this.noiseLevel = noiseLevel;
-    }
-
-    public int getScenery() {
-        return scenery;
-    }
-
-    public void setScenery(int scenery) {
-        this.scenery = scenery;
-    }
-
-    public int getWaterDepth() {
-        return waterDepth;
-    }
-
-    public void setWaterDepth(int waterDepth) {
-        this.waterDepth = waterDepth;
-    }
 }

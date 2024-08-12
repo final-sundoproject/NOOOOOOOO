@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,6 +20,8 @@
         android:theme="@style/Theme.Sundo_project_app"
         android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="31">
+
+
 
         <activity
             android:name=".MainActivity"
@@ -69,11 +76,9 @@
                 <action android:name="com.example.EVALUATIONFINDALL_ACTION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+
         </activity>
-
-
-
-
 
     </application>
 

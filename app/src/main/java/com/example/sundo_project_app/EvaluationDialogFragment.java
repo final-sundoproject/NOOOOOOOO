@@ -67,35 +67,31 @@ public class EvaluationDialogFragment extends DialogFragment {
                     try {
                         String jsonResponse = response.body().string();
                         JSONArray jsonArray = new JSONArray(jsonResponse);
-                        evaluationList.clear(); // Clear old data
+                        evaluationList.clear();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             Evaluation evaluation = new Evaluation();
+                            evaluation.setArImage(jsonObject.getString("arImage"));
                             evaluation.setTitle(jsonObject.getString("title"));
                             evaluation.setRegistrantName(jsonObject.getString("registrantName"));
-                            evaluation.setWindVolume(jsonObject.getInt("windVolume"));
-                            evaluation.setNoiseLevel(jsonObject.getInt("noiseLevel"));
-                            evaluation.setScenery(jsonObject.getInt("scenery"));
-                            evaluation.setWaterDepth(jsonObject.getInt("waterDepth"));
+                            evaluation.setAverageRating(jsonObject.getInt("averageRating"));
+
 
                             evaluationList.add(evaluation);
                         }
 
-                        evaluationAdapter.notifyDataSetChanged(); // Notify adapter about data changes
+                        evaluationAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        // Handle the exception
                     }
-                } else {
-                    // Handle unsuccessful response
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Handle failure
+
             }
         });
     }
