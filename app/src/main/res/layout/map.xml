@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,16 +19,56 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/coordinateSelect"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/login_button_background"
+        android:paddingTop="3dp"
+        android:text="좌표선택"
+        android:textAlignment="center"
+        android:textColor="#ffff"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/coordinateInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/logoImage"
-        android:layout_width="410dp"
-        android:layout_height="730dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="10dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/samplemap" />
+    <Button
+        android:id="@+id/coordinateInput"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/login_button_background"
+        android:paddingTop="3dp"
+        android:text="좌표입력"
+        android:textAlignment="center"
+        android:textColor="#ffff"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/arCheck"
+        app:layout_constraintStart_toEndOf="@id/coordinateSelect"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/arCheck"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/login_button_background"
+        android:paddingTop="3dp"
+        android:text="AR 확인"
+        android:textAlignment="center"
+        android:textColor="#ffff"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/coordinateInput"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textBox3"
@@ -42,132 +83,91 @@
         android:textAlignment="center"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/arCheck" />
-
-    <Button
-        android:id="@+id/arCheck"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:background="@drawable/login_button_background"
-        android:paddingTop="3dp"
-        android:text="AR 확인"
-        android:textAlignment="center"
-        android:textColor="#ffff"
-        android:textSize="17dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/coordinateInput"
-        app:layout_constraintWidth_percent="0.3"
-        tools:layout_editor_absoluteY="57dp" />
-
-    <Button
-        android:id="@+id/coordinateInput"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:background="@drawable/login_button_background"
-        android:paddingTop="3dp"
-        android:text="좌표입력"
-        android:textAlignment="center"
-        android:textColor="#ffff"
-        android:textSize="17dp"
-        android:textStyle="bold"
-        app:layout_constraintWidth_percent="0.3"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="57dp" />
-
-    <Button
-        android:id="@+id/coordinateSelect"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:background="@drawable/login_button_background"
-        android:paddingTop="3dp"
-        android:text="좌표선택"
-        android:textAlignment="center"
-        android:textColor="#ffff"
-        android:textSize="17dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/coordinateInput"
-        app:layout_constraintWidth_percent="0.3"
-        tools:layout_editor_absoluteY="57dp" />
-
 
     <Button
         android:id="@+id/back"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/login_button_background"
         android:paddingTop="3dp"
         android:text="#"
         android:textAlignment="center"
         android:textColor="#ffff"
-        android:textSize="17dp"
+        android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintWidth_percent="0.3"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="96dp" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textBox3" />
 
     <Button
         android:id="@+id/gps"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/login_button_background"
         android:paddingTop="3dp"
         android:text="#"
         android:textAlignment="center"
         android:textColor="#ffff"
-        android:textSize="17dp"
+        android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintWidth_percent="0.3"
-        tools:layout_editor_absoluteX="365dp"
-        tools:layout_editor_absoluteY="58dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/arCheck" />
 
     <Button
         android:id="@+id/remove"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/login_button_background"
         android:paddingTop="3dp"
         android:text="#"
         android:textAlignment="center"
         android:textColor="#ffff"
-        android:textSize="17dp"
+        android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintWidth_percent="0.3"
-        tools:layout_editor_absoluteX="366dp"
-        tools:layout_editor_absoluteY="96dp" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gps" />
 
     <Button
         android:id="@+id/pointList"
-        android:layout_width="100dp"
+        android:layout_width="0dp"
         android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/login_button_background"
         android:paddingTop="3dp"
         android:text="점수목록"
         android:textAlignment="center"
         android:textColor="#ffff"
-        android:textSize="17dp"
+        android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintWidth_percent="0.3"
-        tools:layout_editor_absoluteX="295dp"
-        tools:layout_editor_absoluteY="627dp" />
+        app:layout_constraintBottom_toTopOf="@+id/enteredPoint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/enteredPoint"
-        android:layout_width="100dp"
+        android:layout_width="0dp"
         android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/login_button_background"
         android:paddingTop="3dp"
         android:text="점수입력"
         android:textAlignment="center"
         android:textColor="#ffff"
-        android:textSize="17dp"
+        android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintWidth_percent="0.3"
-        tools:layout_editor_absoluteX="295dp"
-        tools:layout_editor_absoluteY="665dp" />
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

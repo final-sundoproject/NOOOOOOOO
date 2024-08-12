@@ -21,17 +21,17 @@
     <!-- 첫 번째 풍력 발전기 옵션 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@drawable/generator_background"
+        android:layout_height="129dp"
         android:layout_marginBottom="8dp"
-        android:gravity="center_vertical">
+        android:background="@drawable/generator_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/doosan_wind_generator"/>
+            android:src="@drawable/doosan_wind_generator" />
 
 
         <LinearLayout
@@ -46,8 +46,8 @@
                 android:layout_height="wrap_content"
                 android:text="두산중공업 풍력 발전기"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <!-- 방향 각도 입력 부분 -->
             <TextView
@@ -60,28 +60,28 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:text="방향 각도 :"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp" />
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/doosan_angle_edit_text"
-                    android:layout_width="64dp"
+                    android:layout_width="85dp"
                     android:layout_height="wrap_content"
-                    android:text="0.0"
-                    android:inputType="numberDecimal"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp"
                     android:background="@android:drawable/editbox_background"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:text="0.0"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -91,14 +91,14 @@
             android:layout_height="wrap_content"
             android:background="@drawable/generator_button_background"
             android:text="선택"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- 두 번째 풍력 발전기 옵션 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="129dp"
         android:orientation="horizontal"
         android:padding="16dp"
         android:layout_marginBottom="8dp"
@@ -142,15 +142,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:text="방향 각도 :"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp" />
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/unison_angle_edit_text"
-                    android:layout_width="64dp"
+                    android:layout_width="85dp"
                     android:layout_height="wrap_content"
                     android:text="0.0"
                     android:inputType="numberDecimal"
