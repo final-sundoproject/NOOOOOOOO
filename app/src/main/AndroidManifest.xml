@@ -76,9 +76,9 @@
                 <action android:name="com.example.EVALUATIONFINDALL_ACTION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
-
         </activity>
+
+        <activity android:name=".EvaluationDetailActivity"></activity>
 
     </application>
 

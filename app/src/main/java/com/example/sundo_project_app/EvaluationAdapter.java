@@ -1,23 +1,27 @@
 package com.example.sundo_project_app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 
-import java.text.BreakIterator;
+import java.io.Serializable;
 import java.util.List;
 
 public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.EvaluationViewHolder> {
 
     private final List<Evaluation> evaluationList;
+    private final Context context;
 
-    public EvaluationAdapter(List<Evaluation> evaluationList) {
+    public EvaluationAdapter(Context context, List<Evaluation> evaluationList) {
+        this.context = context;
         this.evaluationList = evaluationList;
     }
 
@@ -40,6 +44,19 @@ public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.Ev
         holder.titleTextView.setText("평가명: " + evaluation.getTitle());
         holder.registrantNameTextView.setText("등록자명: " + evaluation.getRegistrantName());
         holder.averageRatingTextView.setText("평점: " + evaluation.getAverageRating());
+
+        holder.itemView.setOnClickListener(v -> {
+            Evaluation selectedEvaluation = evaluationList.get(position); // 클릭된 항목 가져오기
+            EvaluationDetailDialogFragment dialog = EvaluationDetailDialogFragment.newInstance(
+                    evaluationList,
+                    selectedEvaluation.getEvaluationId(),
+                    selectedEvaluation.getNoiseLevel(),
+                    selectedEvaluation.getScenery(),
+                    selectedEvaluation.getWaterDepth(),
+                    selectedEvaluation.getWindVolume()
+            );
+            dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "EvaluationDetailDialog");
+        });
     }
 
     @Override
@@ -52,8 +69,6 @@ public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.Ev
         TextView titleTextView;
         TextView registrantNameTextView;
         TextView averageRatingTextView;
-
-
 
         public EvaluationViewHolder(@NonNull View itemView) {
             super(itemView);

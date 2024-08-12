@@ -27,10 +27,38 @@
         android:layout_marginTop="4dp"/>
 
     <TextView
-        android:id="@+id/textViewAverage"
+        android:id="@+id/textViewWindVolume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewRegistrantName"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/textviewNoiseLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewWindVolume"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/textviewWaterDepth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textviewNoiseLevel"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/textViewScenery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textviewWaterDepth"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/textViewAverage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewScenery"
         android:layout_marginTop="4dp"/>
 
 </RelativeLayout>

@@ -1,7 +1,9 @@
 // Evaluation.java
 package com.example.sundo_project_app;
 
-public class Evaluation {
+import java.io.Serializable;
+
+public class Evaluation implements Serializable {
     private String title;
     private String registrantName;
     private String arImage;
@@ -41,7 +43,7 @@ public class Evaluation {
     public void setAverageRating (int averageRating){this.averageRating = averageRating;}
 
     public Long getEvaluationId (){return evaluationId;}
-    public void setEvaluationId (int evaluationId){this.evaluationId = evaluationId;}
+    public void setEvaluationId (long evaluationId){this.evaluationId = evaluationId;}
 
     public int getWindVolume (){return windVolume;}
     public void setWindVolume (int windVolume){this.windVolume = windVolume;}

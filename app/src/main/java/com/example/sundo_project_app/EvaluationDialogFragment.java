@@ -1,9 +1,9 @@
-// EvaluationDialogFragment.java
 package com.example.sundo_project_app;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -19,6 +19,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class EvaluationDialogFragment extends DialogFragment {
         View view = getActivity().getLayoutInflater().inflate(R.layout.activity_evaluation_find_all, null);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        evaluationAdapter = new EvaluationAdapter(evaluationList);
+        evaluationAdapter = new EvaluationAdapter(getContext(), evaluationList);
         recyclerView.setAdapter(evaluationAdapter);
 
         fetchDataAndUpdateRecyclerView();
@@ -80,14 +81,16 @@ public class EvaluationDialogFragment extends DialogFragment {
                             evaluation.setWindVolume(jsonObject.getInt("windVolume"));
                             evaluation.setNoiseLevel(jsonObject.getInt("noiseLevel"));
                             evaluation.setAverageRating(jsonObject.getInt("averageRating"));
-                            evaluation.setEvaluationId((int) jsonObject.getLong("evaluationId"));
+                            evaluation.setEvaluationId((jsonObject.getLong("evaluationId")));
 
 
-                            evaluationList.add(evaluation);
+                                                        evaluationList.add(evaluation);
                         }
 
                         evaluationAdapter.notifyDataSetChanged();
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -96,7 +99,7 @@ public class EvaluationDialogFragment extends DialogFragment {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Log.e("EvaluationFailure", "Network request failed", t);
             }
         });
     }
