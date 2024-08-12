@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,13 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
         holder.projectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             project.setChecked(isChecked);
         });
+
+        // RelativeLayout 클릭 시 CheckBox 상태를 토글
+        holder.itemContainer.setOnClickListener(v -> {
+            boolean isChecked = holder.projectCheckBox.isChecked();
+            holder.projectCheckBox.setChecked(!isChecked);
+            project.setChecked(!isChecked);
+        });
     }
 
     @Override
@@ -51,12 +59,14 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
         TextView projectNameTextView;
         TextView registrationDateTextView;
         CheckBox projectCheckBox;
+        RelativeLayout itemContainer;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             projectNameTextView = itemView.findViewById(R.id.projectName);
             registrationDateTextView = itemView.findViewById(R.id.registrationDate);
             projectCheckBox = itemView.findViewById(R.id.projectCheckBox);
+            itemContainer = itemView.findViewById(R.id.itemContainer);
         }
     }
 }

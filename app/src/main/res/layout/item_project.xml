@@ -1,33 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:layout_marginBottom="8dp">
-
-    <TextView
-        android:id="@+id/projectName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="프로젝트 이름"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="4dp"
-        android:layout_toEndOf="@id/projectCheckBox"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"/>
-
-    <TextView
-        android:id="@+id/registrationDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="등록 일자: 2024년 4월 24일 오전 10시 33분"
-        android:textSize="14sp"
-        android:layout_below="@id/projectName"
-        android:layout_toEndOf="@id/projectCheckBox"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"/>
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/border">
 
     <CheckBox
         android:id="@+id/projectCheckBox"
@@ -36,4 +13,26 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"/>
 
+    <TextView
+        android:id="@+id/projectName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="프로젝트 이름"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toStartOf="@id/projectCheckBox"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/registrationDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="등록 일자: 2024년 4월 24일 오전 10시 33분"
+        android:textSize="14sp"
+        android:layout_below="@id/projectName"
+        android:layout_toStartOf="@id/projectCheckBox"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"/>
 </RelativeLayout>
