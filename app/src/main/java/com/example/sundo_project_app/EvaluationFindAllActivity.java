@@ -15,7 +15,7 @@ public class EvaluationFindAllActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.map); // Using map layout
+        setContentView(R.layout.map); //
 
         btnShowDialog = findViewById(R.id.btnShowDialog);
         btnShowList = findViewById(R.id.enteredPoint);

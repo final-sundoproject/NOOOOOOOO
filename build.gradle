@@ -1,15 +1,19 @@
 buildscript {
-    repositories {
-        google()
-        mavenCentral()
+        dependencies {
+            classpath 'com.android.tools.build:gradle:8.0.0'
+        }
+    }
 
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-    }
-}
 
 plugins {
     alias(libs.plugins.android.application) apply false
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://repository.map.naver.com/archive/maven" }
+    }
 }
 
