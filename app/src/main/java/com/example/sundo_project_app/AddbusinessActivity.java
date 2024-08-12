@@ -1,7 +1,9 @@
 package com.example.sundo_project_app;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,11 +30,12 @@ public class AddbusinessActivity extends AppCompatActivity {
     private ProjectAdapter projectAdapter;
     private List<Project> projectList = new ArrayList<>();
     private ProjectApi apiService;
+    private int companyCode = 2;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_business);  // 기존의 add_business.xml 레이아웃 파일 사용
+        setContentView(R.layout.add_business);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -41,7 +44,7 @@ public class AddbusinessActivity extends AppCompatActivity {
         recyclerView.setAdapter(projectAdapter);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8000") // 서버의 기본 URL
+                .baseUrl("http://10.0.2.2:8000/") // 서버의 기본 URL (에뮬레이터에서는 localhost가 10.0.2.2로 매핑됨)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -56,40 +59,16 @@ public class AddbusinessActivity extends AppCompatActivity {
         deleteProjectButton.setOnClickListener(v -> deleteSelectedProjects());
     }
 
-    private void showAddProjectDialog() {
-        // Dialog 생성
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.modal_dialog);  // modal_dialog.xml 레이아웃 파일 사용
-
-        EditText projectNameInput = dialog.findViewById(R.id.projectNameInput);
-        Button submitProjectButton = dialog.findViewById(R.id.submitProjectButton);
-        Button cancelButton = dialog.findViewById(R.id.cancelButton);
-
-        // 추가 버튼 클릭 시
-        submitProjectButton.setOnClickListener(v -> {
-            String projectName = projectNameInput.getText().toString().trim();
-            if (!projectName.isEmpty()) {
-                addProject(projectName);
-                dialog.dismiss();
-            } else {
-                Toast.makeText(AddbusinessActivity.this, "사업명을 입력하세요", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // 취소 버튼 클릭 시
-        cancelButton.setOnClickListener(v -> dialog.dismiss());
-
-        dialog.show();
-    }
-
     private void loadProjects() {
-        apiService.getProjects().enqueue(new Callback<List<Project>>() {
+        apiService.getProjects(companyCode).enqueue(new Callback<List<Project>>() {
             @Override
             public void onResponse(Call<List<Project>> call, Response<List<Project>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     projectList.clear();
                     projectList.addAll(response.body());
                     projectAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(AddbusinessActivity.this, "No projects found", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -100,50 +79,84 @@ public class AddbusinessActivity extends AppCompatActivity {
         });
     }
 
-    private void addProject(String projectName) {
-        Project newProject = new Project();
-        newProject.setProjectName(projectName);
-        newProject.setRegistrationDate("2024-04-24 10:33:00"); // 예시로 고정된 날짜
+    private void showAddProjectDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.modal_dialog, null);
+        builder.setView(dialogView);
 
-        apiService.addProject(newProject).enqueue(new Callback<Project>() {
+        EditText projectNameInput = dialogView.findViewById(R.id.projectNameInput);
+
+        builder.setPositiveButton("추가", (dialog, which) -> {
+            String projectName = projectNameInput.getText().toString();
+            if (!projectName.isEmpty()) {
+                addNewProject(projectName);
+            } else {
+                Toast.makeText(AddbusinessActivity.this, "Project name cannot be empty", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void addNewProject(String projectName) {
+        Project newProject = new Project(projectName, companyCode, "");  // 등록일자는 서버에서 설정
+        apiService.createProject(newProject).enqueue(new Callback<Project>() {
             @Override
             public void onResponse(Call<Project> call, Response<Project> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     projectList.add(response.body());
                     projectAdapter.notifyDataSetChanged();
+                    Toast.makeText(AddbusinessActivity.this, "Project added", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AddbusinessActivity.this, "Failed to add project", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Project> call, Throwable t) {
-                Toast.makeText(AddbusinessActivity.this, "Failed to add project", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddbusinessActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void deleteSelectedProjects() {
-        List<Project> toDelete = new ArrayList<>();
+        List<Integer> selectedProjectIds = new ArrayList<>();
         for (Project project : projectList) {
             if (project.isChecked()) {
-                toDelete.add(project);
+                selectedProjectIds.add(project.getProjectId());
             }
         }
 
-        for (Project project : toDelete) {
-            apiService.deleteProject(project.getProjectId()).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        projectList.remove(project);
-                        projectAdapter.notifyDataSetChanged();
-                    }
-                }
+        if (!selectedProjectIds.isEmpty()) {
+            for (int projectId : selectedProjectIds) {
+                deleteProject(projectId);
+            }
+        } else {
+            Toast.makeText(this, "No projects selected", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+    private void deleteProject(int projectId) {
+        apiService.deleteProject(projectId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    projectList.removeIf(project -> project.getProjectId() == projectId);
+                    projectAdapter.notifyDataSetChanged();
+                    Toast.makeText(AddbusinessActivity.this, "Project deleted", Toast.LENGTH_SHORT).show();
+                } else {
                     Toast.makeText(AddbusinessActivity.this, "Failed to delete project", Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(AddbusinessActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

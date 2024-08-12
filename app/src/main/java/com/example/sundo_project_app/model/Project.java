@@ -2,22 +2,32 @@ package com.example.sundo_project_app.model;
 
 public class Project {
 
-    private int projectId;  // 프로젝트 ID
+    // 프로젝트의 고유 ID
+    private int projectId;
+
+    // 프로젝트의 이름
     private String projectName;
+
+    // 회사 코드
     private int companyCode;
+
+    // 프로젝트 등록 날짜
     private String registrationDate;
-    private boolean isChecked;  // 선택 상태를 관리하기 위한 필드
 
-    public Project() {
-        // 기본 생성자 (Retrofit과 같은 라이브러리에서 필요할 수 있음)
-    }
+    // 프로젝트 선택 상태를 관리하기 위한 필드
+    private boolean isChecked;
 
+    // 기본 생성자
+    public Project() {}
+
+    // 프로젝트 이름, 회사 코드, 등록 날짜를 사용하는 생성자
     public Project(String projectName, int companyCode, String registrationDate) {
         this.projectName = projectName;
         this.companyCode = companyCode;
         this.registrationDate = registrationDate;
     }
 
+    // 모든 필드를 사용하는 생성자
     public Project(int projectId, String projectName, int companyCode, String registrationDate) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -63,7 +73,7 @@ public class Project {
         return isChecked;
     }
 
-    public void setChecked(boolean checked) {
-        isChecked = checked;
+    public void setChecked(boolean isChecked) {
+        this.isChecked = isChecked;
     }
 }

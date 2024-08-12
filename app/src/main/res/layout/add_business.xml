@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- 사업명 입력 필드 -->
     <EditText
         android:id="@+id/searchBar"
         android:layout_width="match_parent"
@@ -14,7 +15,7 @@
         android:background="@drawable/rounded_edittext"
         android:layout_marginBottom="16dp"/>
 
-
+    <!-- 프로젝트 목록을 표시할 RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
@@ -24,6 +25,7 @@
         android:layout_marginBottom="16dp"
         android:scrollbars="vertical"/>
 
+    <!-- 하단 버튼 영역 -->
     <LinearLayout
         android:id="@+id/buttonContainer"
         android:layout_width="match_parent"
@@ -32,6 +34,7 @@
         android:orientation="horizontal"
         android:gravity="center">
 
+        <!-- 사업 추가 버튼 -->
         <Button
             android:id="@+id/addProjectButton"
             android:layout_width="0dp"
@@ -42,6 +45,7 @@
             android:textColor="@android:color/white"
             android:padding="10dp"/>
 
+        <!-- 사업 삭제 버튼 -->
         <Button
             android:id="@+id/deleteProjectButton"
             android:layout_width="0dp"

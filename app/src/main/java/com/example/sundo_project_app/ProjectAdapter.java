@@ -13,7 +13,7 @@ import com.example.sundo_project_app.model.Project;
 
 import java.util.List;
 
-public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder> {
+public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
 
     private List<Project> projectList;
 
@@ -23,19 +23,20 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
     @NonNull
     @Override
-    public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_project, parent, false);
-        return new ProjectViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Project project = projectList.get(position);
-        holder.projectName.setText(project.getProjectName());
-        holder.registrationDate.setText("등록 일자: " + project.getRegistrationDate());
-        holder.checkBox.setChecked(project.isChecked());
+        holder.projectNameTextView.setText(project.getProjectName());
+        holder.registrationDateTextView.setText(project.getRegistrationDate());
+        holder.projectCheckBox.setChecked(project.isChecked());
 
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        // CheckBox의 클릭 이벤트를 설정합니다.
+        holder.projectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             project.setChecked(isChecked);
         });
     }
@@ -45,16 +46,17 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         return projectList.size();
     }
 
-    public static class ProjectViewHolder extends RecyclerView.ViewHolder {
-        TextView projectName;
-        TextView registrationDate;
-        CheckBox checkBox;
+    // ViewHolder 클래스 정의
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView projectNameTextView;
+        TextView registrationDateTextView;
+        CheckBox projectCheckBox;
 
-        public ProjectViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            projectName = itemView.findViewById(R.id.projectName);
-            registrationDate = itemView.findViewById(R.id.registrationDate);
-            checkBox = itemView.findViewById(R.id.checkBox);
+            projectNameTextView = itemView.findViewById(R.id.projectName);
+            registrationDateTextView = itemView.findViewById(R.id.registrationDate);
+            projectCheckBox = itemView.findViewById(R.id.projectCheckBox);
         }
     }
 }
