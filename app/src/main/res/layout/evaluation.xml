@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="명칭: 강화도 A 영향 평가 3KM"
+                android:text="강화도 A 영향 평가 3KM"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
 
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="관찰자명: 김재엽"
+                android:text="김재엽"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
 
@@ -71,7 +71,7 @@
                 android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="등록일자: 2024년 4월 18일 오후 2시 01분"
+                android:text="2024년 4월 18일 오후 2시 01분"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
         </LinearLayout>
