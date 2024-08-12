@@ -75,7 +75,12 @@ public class EvaluationDialogFragment extends DialogFragment {
                             evaluation.setArImage(jsonObject.getString("arImage"));
                             evaluation.setTitle(jsonObject.getString("title"));
                             evaluation.setRegistrantName(jsonObject.getString("registrantName"));
+                            evaluation.setScenery(jsonObject.getInt("scenery"));
+                            evaluation.setWaterDepth(jsonObject.getInt("waterDepth"));
+                            evaluation.setWindVolume(jsonObject.getInt("windVolume"));
+                            evaluation.setNoiseLevel(jsonObject.getInt("noiseLevel"));
                             evaluation.setAverageRating(jsonObject.getInt("averageRating"));
+                            evaluation.setEvaluationId((int) jsonObject.getLong("evaluationId"));
 
 
                             evaluationList.add(evaluation);
