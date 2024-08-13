@@ -44,6 +44,21 @@
             </intent-filter>
         </activity>
 
+        <!-- SignUpActivity 추가 (이승연) -->
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.SIGNUP_ACTION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".EmailFindActivity" />
+
+
+
+
         <activity
             android:name=".DmsActivity"
             android:exported="true">

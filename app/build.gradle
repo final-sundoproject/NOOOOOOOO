@@ -37,6 +37,10 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+//    240813 이승연 추가
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3' // 최신 버전으로 사용
+
 }
 
 
