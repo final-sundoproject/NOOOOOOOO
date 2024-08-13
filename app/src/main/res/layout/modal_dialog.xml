@@ -3,44 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@android:color/white"
-    android:layout_margin="20dp"
-    android:elevation="10dp">
+    android:padding="16dp">
 
+    <!-- 대화 상자 제목 -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="사업 추가"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
-
-    <EditText
-        android:id="@+id/project_name_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="사업명" />
+        android:text="새 사업 추가"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp"/>
 
+    <!-- 사업명 입력 필드 -->
+    <EditText
+        android:id="@+id/projectNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="사업명을 입력하세요"
+        android:inputType="text"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:singleLine="true"/>
+
+    <!-- 버튼 영역 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="right"
-        android:layout_marginTop="20dp">
-
-        <Button
-            android:id="@+id/confirm_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="확인" />
-
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="취소"
-            android:layout_marginLeft="10dp" />
+        android:layout_marginTop="16dp">
 
     </LinearLayout>
 </LinearLayout>

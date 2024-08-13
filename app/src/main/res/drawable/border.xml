@@ -11,3 +11,7 @@
         android:bottom="4dp"/>
     <corners android:radius="4dp"/> <!-- 모서리 둥글기 -->
 </shape>
+
+
+
+
