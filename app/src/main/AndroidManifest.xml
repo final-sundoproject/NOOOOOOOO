@@ -14,7 +14,6 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -54,7 +53,31 @@
             </intent-filter>
         </activity>
 
-        <!-- SignUpActivity 추가 (이승연) -->
+   
+        <activity
+
+            android:name=".MapActivity"
+            android:exported="true">
+            <!-- intent-filter 제거 -->
+        </activity>
+
+        <activity
+            android:name=".ChoiceCooridate"
+            android:theme="@style/CustomDmsTheme"
+            android:exported="true">
+            <!-- intent-filter 제거 -->
+        </activity>
+
+        <activity
+            android:name=".DmsActivity"
+            android:theme="@style/CustomDmsTheme"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.DMS_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".SignUpActivity"
             android:exported="true">
@@ -66,14 +89,26 @@
 
         <activity android:name=".EmailFindActivity" />
 
+        <activity
 
-
+            android:name=".DdActivity"
+            android:theme="@style/CustomDmsTheme"
+            android:exported="true">
+            <!-- intent-filter 제거 -->
+        </activity>
 
         <activity
-            android:name=".DmsActivity"
+            android:name=".GeneratorActivity"
+            android:theme="@style/CustomGeneratorTheme"
+            android:exported="true">
+            <!-- intent-filter 제거 -->
+        </activity>
+
+        <activity
+            android:name=".EvaluationActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.DMS_ACTION"/>
+                <action android:name="com.example.EVALUATION_ACTION"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

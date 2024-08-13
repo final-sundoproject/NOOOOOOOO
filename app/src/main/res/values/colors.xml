@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#A6A2A2</color>
+    <color name="green">#49DE4F</color>
+    <color name="green_lighter">#D4F0D4</color>
+    <color name="primaryColor">#6200EE</color>  <!-- 보라색 계열 -->
+    <color name="secondaryColor">#03DAC5</color> <!-- 청록색 계열 -->
 </resources>
