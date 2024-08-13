@@ -114,7 +114,7 @@ public class AddbusinessActivity extends AppCompatActivity {
             if (!projectName.isEmpty()) {
                 addNewProject(projectName);
             } else {
-                Toast.makeText(AddbusinessActivity.this, "Project name cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddbusinessActivity.this, "사업명을 입력하세요", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -132,7 +132,7 @@ public class AddbusinessActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     projectList.add(response.body());
                     projectAdapter.updateProjectList(projectList);
-                    Toast.makeText(AddbusinessActivity.this, "Project added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddbusinessActivity.this, "사업이 추가되었습니다", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AddbusinessActivity.this, "Failed to add project", Toast.LENGTH_SHORT).show();
                 }
@@ -158,7 +158,7 @@ public class AddbusinessActivity extends AppCompatActivity {
                 deleteProject(projectId);
             }
         } else {
-            Toast.makeText(this, "No projects selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "선택된 사업이 없습니다", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -169,7 +169,7 @@ public class AddbusinessActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     projectList.removeIf(project -> project.getProjectId().equals(projectId));
                     projectAdapter.updateProjectList(projectList);
-                    Toast.makeText(AddbusinessActivity.this, "Project deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddbusinessActivity.this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AddbusinessActivity.this, "Failed to delete project", Toast.LENGTH_SHORT).show();
                 }
