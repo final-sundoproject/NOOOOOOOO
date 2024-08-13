@@ -7,17 +7,16 @@
     android:background="@drawable/main_background_rouded">
 
     <ImageView
-        android:id="@+id/fragment_container"
+        android:id="@+id/logo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
         android:src="@drawable/logo"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.5"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
