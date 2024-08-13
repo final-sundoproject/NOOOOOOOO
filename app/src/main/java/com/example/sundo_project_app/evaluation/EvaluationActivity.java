@@ -65,7 +65,7 @@ public class EvaluationActivity extends AppCompatActivity {
         executor.execute(() -> {
             String result = null;
             try {
-                URL url = new URL("http://10.0.2.2:8080/evaluation");
+                URL url = new URL("http://10.0.2.2:8000/evaluation");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
@@ -108,7 +108,7 @@ public class EvaluationActivity extends AppCompatActivity {
     private void addFormField(DataOutputStream request, String fieldName, String fieldValue) throws Exception {
         request.writeBytes("--" + BOUNDARY + LINE_FEED);
         request.writeBytes("Content-Disposition: form-data; name=\"" + fieldName + "\"" + LINE_FEED);
-        request.writeBytes("Content-Type: text/plain; charset=UTF-8" + LINE_FEED); // charset=UTF-8 추가
+        request.writeBytes("Content-Type: application/json; charset=UTF-8" + LINE_FEED); // charset=UTF-8 추가
         request.writeBytes(LINE_FEED);
         request.writeBytes(new String(fieldValue.getBytes("UTF-8"), "ISO-8859-1") + LINE_FEED); // UTF-8로 인코딩
     }
@@ -145,3 +145,4 @@ public class EvaluationActivity extends AppCompatActivity {
         return file;
     }
 }
+
