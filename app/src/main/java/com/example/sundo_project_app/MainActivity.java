@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.os.Handler;
+import android.util.Log;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         deny.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "카메라 권한이 거절되었습니다. \n앱을 종료합니다.", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "위치 권한이 거부되었습니다. \n앱을 종료합니다.", Toast.LENGTH_LONG).show();
                 finish(); // 앱 종료
+
             }
         }
     }
