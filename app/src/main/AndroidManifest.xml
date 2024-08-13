@@ -55,7 +55,7 @@
         </activity>
 
         <activity
-            android:name=".EvaluationActivity"
+            android:name=".evaluation.EvaluationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.EVALUATION_ACTION"/>
@@ -64,7 +64,7 @@
         </activity>
 
         <activity
-            android:name=".EvaluationFindAllActivity"
+            android:name=".evaluation.EvaluationFindAllActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.EVALUATIONFINDALL_ACTION"/>

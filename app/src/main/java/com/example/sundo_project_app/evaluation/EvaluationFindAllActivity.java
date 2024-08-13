@@ -1,11 +1,13 @@
 // EvaluationFindAllActivity.java
-package com.example.sundo_project_app;
+package com.example.sundo_project_app.evaluation;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.sundo_project_app.R;
 
 public class EvaluationFindAllActivity extends AppCompatActivity {
 

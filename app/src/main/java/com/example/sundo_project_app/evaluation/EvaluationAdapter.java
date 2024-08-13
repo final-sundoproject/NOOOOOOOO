@@ -1,18 +1,16 @@
-package com.example.sundo_project_app;
+package com.example.sundo_project_app.evaluation;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.example.sundo_project_app.R;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.EvaluationViewHolder> {
@@ -45,23 +43,20 @@ public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.Ev
         holder.registrantNameTextView.setText("등록자명: " + evaluation.getRegistrantName());
         holder.averageRatingTextView.setText("평점: " + evaluation.getAverageRating());
 
-        holder.itemView.setOnClickListener(v -> {
-            Evaluation selectedEvaluation = evaluationList.get(position); // 클릭된 항목 가져오기
-            EvaluationDetailDialogFragment dialog = EvaluationDetailDialogFragment.newInstance(
-                    evaluationList,
-                    selectedEvaluation.getEvaluationId(),
-                    selectedEvaluation.getNoiseLevel(),
-                    selectedEvaluation.getScenery(),
-                    selectedEvaluation.getWaterDepth(),
-                    selectedEvaluation.getWindVolume()
-            );
-            dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "EvaluationDetailDialog");
-        });
+        // Pass the adapter to EvaluationDelete
+        new EvaluationDelete(context, holder.itemView, evaluation.getEvaluationId(), position, this);
     }
 
     @Override
     public int getItemCount() {
         return evaluationList.size();
+    }
+
+    public void removeItem(int position) {
+        if (position >= 0 && position < evaluationList.size()) {
+            evaluationList.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     static class EvaluationViewHolder extends RecyclerView.ViewHolder {

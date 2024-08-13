@@ -1,5 +1,5 @@
 // Evaluation.java
-package com.example.sundo_project_app;
+package com.example.sundo_project_app.evaluation;
 
 import java.io.Serializable;
 
