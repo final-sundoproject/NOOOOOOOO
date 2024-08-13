@@ -21,7 +21,7 @@ public class MapActivity extends AppCompatActivity {
     private NaverMap naverMap;
     private boolean isMarkerEnabled = false; // 마커 추가 모드 상태
     private Button coordinateSelectButton;
-    private Button backButton; // 뒤로 버튼
+    private Button resetButton; // 뒤로 버튼
     private List<Marker> markers; // 마커 리스트
 
     @Override
@@ -55,8 +55,8 @@ public class MapActivity extends AppCompatActivity {
         coordinateSelectButton.setOnClickListener(v -> toggleMarkerMode());
 
         // 뒤로 버튼 초기화
-        backButton = findViewById(R.id.back);
-        backButton.setOnClickListener(v -> resetToInitialState()); // 초기 상태로 리셋하는 메서드 호출
+        resetButton = findViewById(R.id.resetButton);
+        resetButton.setOnClickListener(v -> resetToInitialState()); // 초기 상태로 리셋하는 메서드 호출
     }
 
     private void onMapReady(@NonNull NaverMap naverMap) {
