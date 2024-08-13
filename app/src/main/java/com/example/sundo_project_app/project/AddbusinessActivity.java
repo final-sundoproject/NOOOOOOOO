@@ -33,7 +33,7 @@ public class AddbusinessActivity extends AppCompatActivity {
     private ProjectAdapter projectAdapter;
     private List<Project> projectList = new ArrayList<>();
     private ProjectApi apiService;
-    private int companyCode = 2;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
+    private Long companyCode = 2L;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +146,7 @@ public class AddbusinessActivity extends AppCompatActivity {
     }
 
     private void deleteSelectedProjects() {
-        List<Integer> selectedProjectIds = new ArrayList<>();
+        List<Long> selectedProjectIds = new ArrayList<>();
         for (Project project : projectList) {
             if (project.isChecked()) {
                 selectedProjectIds.add(project.getProjectId());
@@ -154,7 +154,7 @@ public class AddbusinessActivity extends AppCompatActivity {
         }
 
         if (!selectedProjectIds.isEmpty()) {
-            for (int projectId : selectedProjectIds) {
+            for (Long projectId : selectedProjectIds) {
                 deleteProject(projectId);
             }
         } else {
@@ -162,12 +162,12 @@ public class AddbusinessActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteProject(int projectId) {
+    private void deleteProject(Long projectId) {
         apiService.deleteProject(projectId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    projectList.removeIf(project -> project.getProjectId() == projectId);
+                    projectList.removeIf(project -> project.getProjectId().equals(projectId));
                     projectAdapter.updateProjectList(projectList);
                     Toast.makeText(AddbusinessActivity.this, "Project deleted", Toast.LENGTH_SHORT).show();
                 } else {

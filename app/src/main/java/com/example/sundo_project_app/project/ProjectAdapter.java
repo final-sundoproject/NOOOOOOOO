@@ -46,7 +46,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
         String formattedDate = formatDateString(project.getRegistrationDate());
         holder.registrationDateTextView.setText("등록 일자: " + formattedDate);
 
-
         // CheckBox의 클릭 이벤트를 설정합니다.
         holder.projectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             project.setChecked(isChecked);
@@ -59,7 +58,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
 
     }
 
-
     private String formatDateString(String dateString) {
         try {
             SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
@@ -71,7 +69,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
             return dateString;  // 변환에 실패하면 원래 문자열 반환
         }
     }
-
 
     @Override
     public int getItemCount() {
