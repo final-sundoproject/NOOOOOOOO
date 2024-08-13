@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_corner_background"
+    android:padding="16dp"
+    android:layout_gravity="bottom|center"
+    android:elevation="4dp"
+    android:layout_margin="16dp">
+
+    <!-- 위도 텍스트뷰 -->
+    <TextView
+        android:id="@+id/tv_latitude_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Latitude"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp" />
+
+    <!-- 위도 입력 필드 -->
+    <EditText
+        android:id="@+id/et_latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="37.481169"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:background="@drawable/edittext_background"
+        android:padding="8dp" />
+
+    <!-- 경도 텍스트뷰 -->
+    <TextView
+        android:id="@+id/tv_longitude_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Longitude"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- 경도 입력 필드 -->
+    <EditText
+        android:id="@+id/et_longitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="126.880711"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:background="@drawable/edittext_background"
+        android:padding="8dp" />
+
+    <!-- 좌표 등록 버튼 -->
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="좌표 등록"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

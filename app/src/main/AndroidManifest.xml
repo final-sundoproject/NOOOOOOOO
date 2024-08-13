@@ -46,6 +46,19 @@
         </activity>
 
         <activity
+            android:name=".MapActivity"
+            android:exported="true">
+            <!-- intent-filter 제거 -->
+        </activity>
+
+        <activity
+            android:name=".ChoiceCooridate"
+            android:theme="@style/CustomDmsTheme"
+            android:exported="true">
+            <!-- intent-filter 제거 -->
+        </activity>
+
+        <activity
             android:name=".DmsActivity"
             android:theme="@style/CustomDmsTheme"
             android:exported="true">
@@ -56,12 +69,10 @@
         </activity>
 
         <activity
-            android:name=".EvaluationActivity"
+            android:name=".DdActivity"
+            android:theme="@style/CustomDmsTheme"
             android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.EVALUATION_ACTION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
+            <!-- intent-filter 제거 -->
         </activity>
 
         <activity
@@ -72,9 +83,12 @@
         </activity>
 
         <activity
-            android:name=".MapActivity"
+            android:name=".EvaluationActivity"
             android:exported="true">
-            <!-- intent-filter 제거 -->
+            <intent-filter>
+                <action android:name="com.example.EVALUATION_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
 
         <meta-data
