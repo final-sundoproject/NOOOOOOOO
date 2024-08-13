@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.sundo_project_app.R;
@@ -43,7 +44,20 @@ public class EvaluationAdapter extends RecyclerView.Adapter<EvaluationAdapter.Ev
         holder.registrantNameTextView.setText("등록자명: " + evaluation.getRegistrantName());
         holder.averageRatingTextView.setText("평점: " + evaluation.getAverageRating());
 
-        // Pass the adapter to EvaluationDelete
+
+        holder.itemView.setOnClickListener(v -> {
+            EvaluationDetailDialogFragment dialog = EvaluationDetailDialogFragment.newInstance(
+                    evaluationList,
+                    evaluation.getEvaluationId(),
+                    evaluation.getNoiseLevel(),
+                    evaluation.getScenery(),
+                    evaluation.getWaterDepth(),
+                    evaluation.getWindVolume()
+            );
+            dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "EvaluationDetailDialog");
+        });
+
+
         new EvaluationDelete(context, holder.itemView, evaluation.getEvaluationId(), position, this);
     }
 
