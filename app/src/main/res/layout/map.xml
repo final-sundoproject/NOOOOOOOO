@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:name="com.naver.maps.map.MapFragment" />
 
+
     <TextView
         android:id="@+id/textBox3"
         android:layout_width="0dp"
@@ -98,6 +99,7 @@
         app:layout_constraintTop_toBottomOf="@id/coordinateSelect" />
 
     <Button
+
         android:id="@+id/btnShowDialog"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

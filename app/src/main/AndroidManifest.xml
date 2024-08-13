@@ -2,9 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -45,7 +53,9 @@
             </intent-filter>
         </activity>
 
+   
         <activity
+
             android:name=".MapActivity"
             android:exported="true">
             <!-- intent-filter 제거 -->
@@ -69,6 +79,18 @@
         </activity>
 
         <activity
+            android:name=".SignUpActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.SIGNUP_ACTION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".EmailFindActivity" />
+
+        <activity
+
             android:name=".DdActivity"
             android:theme="@style/CustomDmsTheme"
             android:exported="true">
@@ -87,6 +109,24 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.EVALUATION_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".evaluation.EvaluationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.EVALUATION_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".evaluation.EvaluationFindAllActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.EVALUATIONFINDALL_ACTION"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
