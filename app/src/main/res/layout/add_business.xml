@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D4F1D4"
     android:padding="16dp">
 
     <!-- 사업명 입력 필드 -->
@@ -41,9 +42,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="사업 추가"
-            android:backgroundTint="@android:color/holo_blue_light"
+            android:backgroundTint="#40895B"
             android:textColor="@android:color/white"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:layout_margin="10dp"/>
 
         <!-- 사업 삭제 버튼 -->
         <Button
@@ -52,8 +54,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="사업 삭제"
-            android:backgroundTint="@android:color/holo_red_light"
+            android:backgroundTint="#40895B"
             android:textColor="@android:color/white"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:layout_margin="10dp"/>
     </LinearLayout>
 </RelativeLayout>

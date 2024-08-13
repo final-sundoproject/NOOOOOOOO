@@ -5,11 +5,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.sundo_project_app.model.Project;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
 
@@ -35,6 +41,11 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
         holder.registrationDateTextView.setText(project.getRegistrationDate());
         holder.projectCheckBox.setChecked(project.isChecked());
 
+        // 날짜를 원하는 형식으로 변환
+        String formattedDate = formatDateString(project.getRegistrationDate());
+        holder.registrationDateTextView.setText("등록 일자: " + formattedDate);
+
+
         // CheckBox의 클릭 이벤트를 설정합니다.
         holder.projectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             project.setChecked(isChecked);
@@ -44,7 +55,22 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
         holder.itemView.setOnClickListener(v -> {
             holder.projectCheckBox.setChecked(!holder.projectCheckBox.isChecked());
         });
+
     }
+
+
+    private String formatDateString(String dateString) {
+        try {
+            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault());
+            SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy년 M월 d일 a h시 mm분", Locale.getDefault());
+            Date date = originalFormat.parse(dateString);
+            return targetFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return dateString;  // 변환에 실패하면 원래 문자열 반환
+        }
+    }
+
 
     @Override
     public int getItemCount() {

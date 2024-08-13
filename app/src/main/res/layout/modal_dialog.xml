@@ -19,7 +19,12 @@
         android:id="@+id/projectNameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="사업명을 입력하세요"/>
+        android:hint="사업명을 입력하세요"
+        android:inputType="text"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:singleLine="true"/>
 
     <!-- 버튼 영역 -->
     <LinearLayout
@@ -28,20 +33,5 @@
         android:orientation="horizontal"
         android:layout_marginTop="16dp">
 
-        <!-- 취소 버튼 -->
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="취소"/>
-
-        <!-- 추가 버튼 -->
-        <Button
-            android:id="@+id/submitProjectButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="추가"/>
     </LinearLayout>
 </LinearLayout>
