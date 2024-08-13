@@ -105,15 +105,6 @@
         </activity>
 
         <activity
-            android:name=".EvaluationActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.EVALUATION_ACTION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".evaluation.EvaluationActivity"
             android:exported="true">
             <intent-filter>
