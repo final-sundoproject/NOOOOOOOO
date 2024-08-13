@@ -1,4 +1,4 @@
-package com.example.sundo_project_app;
+package com.example.sundo_project_app.location;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sundo_project_app.R;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -21,10 +23,10 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class DmsActivity extends AppCompatActivity {
+public class DdActivity extends AppCompatActivity {
 
-    private EditText etLatitudeDegrees, etLatitudeMinutes, etLatitudeSeconds, etLatitudeDirection;
-    private EditText etLongitudeDegrees, etLongitudeMinutes, etLongitudeSeconds, etLongitudeDirection;
+    private EditText etlatitude;
+    private EditText etlongitude;
     private Button btnSubmit;
 
     // locationId 변수를 멤버 변수로 선언
@@ -33,18 +35,11 @@ public class DmsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_dms_input);
+        setContentView(R.layout.dialog_dd_input);
 
         // XML의 EditText 및 Button 참조
-        etLatitudeDegrees = findViewById(R.id.et_latitude_degrees);
-        etLatitudeMinutes = findViewById(R.id.et_latitude_minutes);
-        etLatitudeSeconds = findViewById(R.id.et_latitude_seconds);
-        etLatitudeDirection = findViewById(R.id.et_latitude_direction);
-
-        etLongitudeDegrees = findViewById(R.id.et_longitude_degrees);
-        etLongitudeMinutes = findViewById(R.id.et_longitude_minutes);
-        etLongitudeSeconds = findViewById(R.id.et_longitude_seconds);
-        etLongitudeDirection = findViewById(R.id.et_longitude_direction);
+        etlatitude = findViewById(R.id.et_latitude);
+        etlongitude = findViewById(R.id.et_longitude);
 
         btnSubmit = findViewById(R.id.btn_submit);
 
@@ -55,35 +50,13 @@ public class DmsActivity extends AppCompatActivity {
     private void handleSubmit() {
         try {
             // 사용자가 입력한 값을 가져오기
-            double latitudeDegrees = Double.parseDouble(etLatitudeDegrees.getText().toString());
-            double latitudeMinutes = Double.parseDouble(etLatitudeMinutes.getText().toString());
-            double latitudeSeconds = Double.parseDouble(etLatitudeSeconds.getText().toString());
-            String latitudeDirection = etLatitudeDirection.getText().toString().toUpperCase();
-
-            double longitudeDegrees = Double.parseDouble(etLongitudeDegrees.getText().toString());
-            double longitudeMinutes = Double.parseDouble(etLongitudeMinutes.getText().toString());
-            double longitudeSeconds = Double.parseDouble(etLongitudeSeconds.getText().toString());
-            String longitudeDirection = etLongitudeDirection.getText().toString().toUpperCase();
-
-            // 방향 값 검증 (N/S, E/W)
-            if (!latitudeDirection.equals("N") && !latitudeDirection.equals("S")) {
-                throw new IllegalArgumentException("Invalid latitude direction. Use 'N' or 'S'.");
-            }
-
-            if (!longitudeDirection.equals("E") && !longitudeDirection.equals("W")) {
-                throw new IllegalArgumentException("Invalid longitude direction. Use 'E' or 'W'.");
-            }
+            double latitude = Double.parseDouble(etlatitude.getText().toString());
+            double longitude = Double.parseDouble(etlongitude.getText().toString());
 
             // 서버로 전송할 데이터 생성
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("latitudeDegrees", latitudeDegrees);
-            jsonObject.put("latitudeMinutes", latitudeMinutes);
-            jsonObject.put("latitudeSeconds", latitudeSeconds);
-            jsonObject.put("latitudeDirection", latitudeDirection);
-            jsonObject.put("longitudeDegrees", longitudeDegrees);
-            jsonObject.put("longitudeMinutes", longitudeMinutes);
-            jsonObject.put("longitudeSeconds", longitudeSeconds);
-            jsonObject.put("longitudeDirection", longitudeDirection);
+            jsonObject.put("latitude", latitude);
+            jsonObject.put("longitude", longitude);
 
             // 서버로 데이터 전송
             sendCoordinates(jsonObject.toString());
@@ -101,7 +74,7 @@ public class DmsActivity extends AppCompatActivity {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
-        Log.d("DmsActivity", "jsonData: " + jsonData); // jsonData 값을 로그로 출력
+        Log.d("DdActivity", "jsonData: " + jsonData); // jsonData 값을 로그로 출력
 
         executor.execute(() -> {
             String result = null;
@@ -141,10 +114,10 @@ public class DmsActivity extends AppCompatActivity {
             // 메인 스레드에서 UI 업데이트
             String finalResult = result;
             handler.post(() -> {
-                Toast.makeText(DmsActivity.this, finalResult, Toast.LENGTH_LONG).show();
+                Toast.makeText(DdActivity.this, finalResult, Toast.LENGTH_LONG).show();
                 // 좌표 등록이 완료되면 GeneratorActivity로 이동
                 if (locationId != null) {
-                    Intent intent = new Intent(DmsActivity.this, GeneratorActivity.class);
+                    Intent intent = new Intent(DdActivity.this, GeneratorActivity.class);
                     intent.putExtra("locationId", locationId); // locationId를 전달
                     startActivity(intent);
                     Log.d("locationId", "locationId: " + locationId); // jsonData 값을 로그로 출력

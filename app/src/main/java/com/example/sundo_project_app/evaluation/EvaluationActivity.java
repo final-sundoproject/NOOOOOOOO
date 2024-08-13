@@ -65,7 +65,7 @@ public class EvaluationActivity extends AppCompatActivity {
         executor.execute(() -> {
             String result = null;
             try {
-                URL url = new URL("http://10.0.2.2:8000/evaluation");
+                URL url = new URL("http://10.0.2.2:8080/evaluation");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);

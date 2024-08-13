@@ -1,4 +1,4 @@
-package com.example.sundo_project_app;
+package com.example.sundo_project_app.project;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sundo_project_app.model.Project;
+import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.project.model.Project;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

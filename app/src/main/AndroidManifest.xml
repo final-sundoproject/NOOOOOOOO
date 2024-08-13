@@ -36,7 +36,7 @@
         </activity>
 
         <activity
-            android:name=".AddbusinessActivity"
+            android:name=".project.AddbusinessActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.ACTION_ADD_BUSINESS"/>
@@ -45,7 +45,7 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.LOGIN_ACTION"/>
@@ -56,20 +56,20 @@
    
         <activity
 
-            android:name=".MapActivity"
+            android:name=".location.MapActivity"
             android:exported="true">
             <!-- intent-filter 제거 -->
         </activity>
 
         <activity
-            android:name=".ChoiceCooridate"
+            android:name=".location.ChoiceCooridate"
             android:theme="@style/CustomDmsTheme"
             android:exported="true">
             <!-- intent-filter 제거 -->
         </activity>
 
         <activity
-            android:name=".DmsActivity"
+            android:name=".location.DmsActivity"
             android:theme="@style/CustomDmsTheme"
             android:exported="true">
             <intent-filter>
@@ -79,7 +79,7 @@
         </activity>
 
         <activity
-            android:name=".SignUpActivity"
+            android:name=".login.SignUpActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.SIGNUP_ACTION" />
@@ -87,18 +87,18 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".EmailFindActivity" />
+        <activity android:name=".login.EmailFindActivity" />
 
         <activity
 
-            android:name=".DdActivity"
+            android:name=".location.DdActivity"
             android:theme="@style/CustomDmsTheme"
             android:exported="true">
             <!-- intent-filter 제거 -->
         </activity>
 
         <activity
-            android:name=".GeneratorActivity"
+            android:name=".location.GeneratorActivity"
             android:theme="@style/CustomGeneratorTheme"
             android:exported="true">
             <!-- intent-filter 제거 -->

@@ -1,4 +1,4 @@
-package com.example.sundo_project_app;
+package com.example.sundo_project_app.location;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.sundo_project_app.R;
 
 public class ChoiceCooridate extends DialogFragment {
 

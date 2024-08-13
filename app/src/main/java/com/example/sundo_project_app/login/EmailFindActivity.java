@@ -1,4 +1,4 @@
-package com.example.sundo_project_app;
+package com.example.sundo_project_app.login;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.sundo_project_app.R;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

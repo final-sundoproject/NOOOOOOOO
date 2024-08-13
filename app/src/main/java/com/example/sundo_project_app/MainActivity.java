@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.os.Handler;
-import android.util.Log;
+
 
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             if (hasLocationPermission()) {
                 setContentView(R.layout.activity_main);
             } else {
-                requestLocationPermission();
+
             }
         } else {
             showPermissionExplanationDialog();
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                requestLocationPermission(); // 카메라 권한 승인 시 위치 권한 요청
+
             } else {
                 Toast.makeText(this, "카메라 권한이 거부되었습니다. \n앱을 종료합니다.", Toast.LENGTH_LONG).show();
                 finish(); // 앱 종료

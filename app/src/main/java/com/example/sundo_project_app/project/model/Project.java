@@ -1,4 +1,4 @@
-package com.example.sundo_project_app.model;
+package com.example.sundo_project_app.project.model;
 
 public class Project {
 

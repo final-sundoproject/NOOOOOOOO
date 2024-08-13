@@ -1,4 +1,4 @@
-package com.example.sundo_project_app;
+package com.example.sundo_project_app.project;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -14,8 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sundo_project_app.api.ProjectApi;
-import com.example.sundo_project_app.model.Project;
+import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.project.api.ProjectApi;
+import com.example.sundo_project_app.project.model.Project;
 
 import java.util.ArrayList;
 import java.util.List;

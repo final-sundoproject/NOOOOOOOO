@@ -1,6 +1,6 @@
-package com.example.sundo_project_app.api;
+package com.example.sundo_project_app.project.api;
 
-import com.example.sundo_project_app.model.Project;
+import com.example.sundo_project_app.project.model.Project;
 
 import java.util.List;
 
