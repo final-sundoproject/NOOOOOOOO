@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class mapActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +17,7 @@ public class mapActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // DmsActivity 시작합니다.
-                Intent intent = new Intent(mapActivity.this, DmsActivity.class);
+                Intent intent = new Intent(MapActivity.this, DmsActivity.class);
                 startActivity(intent);
             }
         });
@@ -27,7 +27,7 @@ public class mapActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // GeneratorActivity 시작합니다.
-                Intent intent = new Intent(mapActivity.this, GeneratorActivity.class);
+                Intent intent = new Intent(MapActivity.this, GeneratorActivity.class);
                 startActivity(intent);
             }
         });

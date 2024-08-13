@@ -72,7 +72,7 @@
         </activity>
 
         <activity
-            android:name=".mapActivity"
+            android:name=".MapActivity"
             android:exported="true">
             <!-- intent-filter 제거 -->
         </activity>
