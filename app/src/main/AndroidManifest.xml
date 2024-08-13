@@ -2,7 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
 
     <application
         android:allowBackup="true"
@@ -20,9 +31,8 @@
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -30,8 +40,8 @@
             android:name=".AddbusinessActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.ACTION_ADD_BUSINESS" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.example.ACTION_ADD_BUSINESS"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -39,8 +49,8 @@
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.LOGIN_ACTION" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.example.LOGIN_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -63,23 +73,32 @@
             android:name=".DmsActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.DMS_ACTION" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.example.DMS_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".EvaluationActivity"
+            android:name=".evaluation.EvaluationActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.EVALUATION_ACTION" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.example.EVALUATION_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".evaluation.EvaluationFindAllActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.EVALUATIONFINDALL_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
-
-
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="nbpr5wd89w" />
 
     </application>
 
