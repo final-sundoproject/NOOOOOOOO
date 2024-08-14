@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.MainActivity;
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.project.AddbusinessActivity;
 
 import java.io.IOException;
 
@@ -109,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
                         // 다음 화면으로 이동
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, AddbusinessActivity.class);
                         startActivity(intent);
                         finish();
                     });
