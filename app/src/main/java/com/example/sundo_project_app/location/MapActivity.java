@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.evaluation.EvaluationActivity;
+import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,6 +41,9 @@ public class MapActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
     private Handler handler; // Handler를 사용하여 주기적으로 작업 수행
     private Runnable locationUpdateRunnable; // 위치 업데이트를 위한 Runnable
+    private Button btnShowDialog;
+    private Button btnShowList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +63,28 @@ public class MapActivity extends AppCompatActivity {
             mapFragment.getMapAsync(this::onMapReady);
         }
 
-        // 좌표 입력 버튼 클릭 리스너
+        btnShowDialog = findViewById(R.id.btnShowDialog);
+        btnShowList = findViewById(R.id.enteredPoint);
+
+        btnShowDialog.setOnClickListener(v -> {
+            Log.d("EvaluationFindAllActivity", "평가리스트 버튼 클릭됨");
+            showEvaluationDialog();
+        });
+
+        btnShowList.setOnClickListener(v -> {
+            Log.d("btnShowList", "평가입력 버튼 클릭됨");
+            Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
+            startActivity(intent);
+        });
+
+
+    // 좌표 입력 버튼 클릭 리스너
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
             ChoiceCooridate choiceCoordinateDialog = new ChoiceCooridate();
             choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
         });
 
-        // AR 확인 버튼 클릭 리스너
+    // AR 확인 버튼 클릭 리스너
         findViewById(R.id.arCheck).setOnClickListener(v -> {
             Intent intent = new Intent(MapActivity.this, GeneratorActivity.class);
             startActivity(intent);
@@ -116,6 +137,12 @@ public class MapActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void showEvaluationDialog() {
+        EvaluationDialogFragment dialog = new EvaluationDialogFragment();
+        dialog.show(getSupportFragmentManager(), "EvaluationDialog");
+    }
+
 
     private void toggleMarkerMode() {
         isMarkerEnabled = !isMarkerEnabled; // 상태 토글
