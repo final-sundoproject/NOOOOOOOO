@@ -1,6 +1,7 @@
 package com.example.sundo_project_app.project;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,12 +34,20 @@ public class AddbusinessActivity extends AppCompatActivity {
     private ProjectAdapter projectAdapter;
     private List<Project> projectList = new ArrayList<>();
     private ProjectApi apiService;
-    private int companyCode = 2;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
+    private Long companyCode;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_business);
+
+        // Intent에서 companyCode를 가져옴
+        Intent intent = getIntent();
+        companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정
+        if (companyCode == -1) {
+            Toast.makeText(this, "유효하지 않은 회사 코드입니다.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -114,7 +123,7 @@ public class AddbusinessActivity extends AppCompatActivity {
             if (!projectName.isEmpty()) {
                 addNewProject(projectName);
             } else {
-                Toast.makeText(AddbusinessActivity.this, "Project name cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddbusinessActivity.this, "사업명을 입력하세요", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -132,7 +141,7 @@ public class AddbusinessActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     projectList.add(response.body());
                     projectAdapter.updateProjectList(projectList);
-                    Toast.makeText(AddbusinessActivity.this, "Project added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddbusinessActivity.this, "사업이 추가되었습니다", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AddbusinessActivity.this, "Failed to add project", Toast.LENGTH_SHORT).show();
                 }
@@ -146,7 +155,7 @@ public class AddbusinessActivity extends AppCompatActivity {
     }
 
     private void deleteSelectedProjects() {
-        List<Integer> selectedProjectIds = new ArrayList<>();
+        List<Long> selectedProjectIds = new ArrayList<>();
         for (Project project : projectList) {
             if (project.isChecked()) {
                 selectedProjectIds.add(project.getProjectId());
@@ -154,22 +163,22 @@ public class AddbusinessActivity extends AppCompatActivity {
         }
 
         if (!selectedProjectIds.isEmpty()) {
-            for (int projectId : selectedProjectIds) {
+            for (Long projectId : selectedProjectIds) {
                 deleteProject(projectId);
             }
         } else {
-            Toast.makeText(this, "No projects selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "선택된 사업이 없습니다", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void deleteProject(int projectId) {
+    private void deleteProject(Long projectId) {
         apiService.deleteProject(projectId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    projectList.removeIf(project -> project.getProjectId() == projectId);
+                    projectList.removeIf(project -> project.getProjectId().equals(projectId));
                     projectAdapter.updateProjectList(projectList);
-                    Toast.makeText(AddbusinessActivity.this, "Project deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddbusinessActivity.this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AddbusinessActivity.this, "Failed to delete project", Toast.LENGTH_SHORT).show();
                 }

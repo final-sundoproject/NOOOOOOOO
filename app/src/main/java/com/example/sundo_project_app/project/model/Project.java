@@ -3,13 +3,13 @@ package com.example.sundo_project_app.project.model;
 public class Project {
 
     // 프로젝트의 고유 ID
-    private int projectId;
+    private Long projectId;
 
     // 프로젝트의 이름
     private String projectName;
 
     // 회사 코드
-    private int companyCode;
+    private Long companyCode;
 
     // 프로젝트 등록 날짜
     private String registrationDate;
@@ -21,14 +21,14 @@ public class Project {
     public Project() {}
 
     // 프로젝트 이름, 회사 코드, 등록 날짜를 사용하는 생성자
-    public Project(String projectName, int companyCode, String registrationDate) {
+    public Project(String projectName, Long companyCode, String registrationDate) {
         this.projectName = projectName;
         this.companyCode = companyCode;
         this.registrationDate = registrationDate;
     }
 
     // 모든 필드를 사용하는 생성자
-    public Project(int projectId, String projectName, int companyCode, String registrationDate) {
+    public Project(Long projectId, String projectName, Long companyCode, String registrationDate) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.companyCode = companyCode;
@@ -37,11 +37,11 @@ public class Project {
 
     // Getter 및 Setter 메서드
 
-    public int getProjectId() {
+    public Long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
+    public void setProjectId(Long projectId) {
         this.projectId = projectId;
     }
 
@@ -53,11 +53,11 @@ public class Project {
         this.projectName = projectName;
     }
 
-    public int getCompanyCode() {
+    public Long getCompanyCode() {
         return companyCode;
     }
 
-    public void setCompanyCode(int companyCode) {
+    public void setCompanyCode(Long companyCode) {
         this.companyCode = companyCode;
     }
 
