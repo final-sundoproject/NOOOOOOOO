@@ -6,18 +6,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.R;
 
+import java.io.IOException;
+
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.HttpUrl;
-
-import java.io.IOException;
 
 public class EmailFindActivity extends AppCompatActivity {
 
@@ -26,7 +27,7 @@ public class EmailFindActivity extends AppCompatActivity {
     private Button emailFindButton;
     private TextView emailResultTextView;
 
-    private static final String EMAIL_FIND_URL = "http://10.0.2.2:8080/api/companies/find-email";
+    private static final String EMAIL_FIND_URL = "http://10.0.2.2:8000/api/companies/find-email";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

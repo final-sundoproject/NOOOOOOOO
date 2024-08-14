@@ -44,7 +44,6 @@ public class MapActivity extends AppCompatActivity {
     private Button btnShowDialog;
     private Button btnShowList;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,8 +76,7 @@ public class MapActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
-    // 좌표 입력 버튼 클릭 리스너
+        // 좌표 입력 버튼 클릭 리스너
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
             ChoiceCooridate choiceCoordinateDialog = new ChoiceCooridate();
             choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
@@ -143,7 +141,6 @@ public class MapActivity extends AppCompatActivity {
         dialog.show(getSupportFragmentManager(), "EvaluationDialog");
     }
 
-
     private void toggleMarkerMode() {
         isMarkerEnabled = !isMarkerEnabled; // 상태 토글
         if (isMarkerEnabled) {
@@ -157,30 +154,52 @@ public class MapActivity extends AppCompatActivity {
 
     // 현재 위치 가져오기
     private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+
+        if (!hasLocationPermissions()) {
+            requestLocationPermissions();
             return;
         }
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
-                            // 현재 위치에 마커 추가
-                            Marker currentLocationMarker = new Marker();
-                            currentLocationMarker.setPosition(new LatLng(latitude, longitude));
-                            currentLocationMarker.setMap(naverMap);
-                            naverMap.setCameraPosition(new CameraPosition(new LatLng(latitude, longitude), 15)); // 현재 위치로 카메라 이동
-                            Toast.makeText(MapActivity.this, "현재 위치: " + latitude + ", " + longitude, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MapActivity.this, "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
-                        }
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        updateCurrentLocationOnMap(location);
+                    } else {
+                        Toast.makeText(MapActivity.this, "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(MapActivity.this, "위치 검색에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private boolean hasLocationPermissions() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestLocationPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+    }
+
+    private void updateCurrentLocationOnMap(Location location) {
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        Marker currentLocationMarker = new Marker();
+        currentLocationMarker.setPosition(new LatLng(latitude, longitude));
+        currentLocationMarker.setMap(naverMap);
+        naverMap.setCameraPosition(new CameraPosition(new LatLng(latitude, longitude), 15));
+        Toast.makeText(MapActivity.this, "현재 위치: " + latitude + ", " + longitude, Toast.LENGTH_SHORT).show();
     }
 
     // 초기 상태로 리셋
@@ -227,4 +246,4 @@ public class MapActivity extends AppCompatActivity {
             }
         }
     }
-}
+

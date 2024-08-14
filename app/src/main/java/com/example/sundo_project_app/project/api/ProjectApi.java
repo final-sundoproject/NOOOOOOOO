@@ -16,7 +16,7 @@ public interface ProjectApi {
 
     // 특정 회사 코드에 해당하는 모든 프로젝트를 조회하는 메서드
     @GET("api/projects")
-    Call<List<Project>> getProjects(@Query("companyCode") int companyCode);
+    Call<List<Project>> getProjects(@Query("companyCode") Long companyCode);
 
     // 새로운 프로젝트를 추가하는 메서드
     @POST("api/projects")
@@ -24,5 +24,5 @@ public interface ProjectApi {
 
     // 특정 ID의 프로젝트를 삭제하는 메서드
     @DELETE("api/projects/{id}")
-    Call<Void> deleteProject(@Path("id") int projectId);
+    Call<Void> deleteProject(@Path("id") Long projectId);
 }

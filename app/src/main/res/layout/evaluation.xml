@@ -101,6 +101,7 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
 
+
                 <!-- SeekBar와 레이블 -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -189,7 +190,7 @@
                     android:id="@+id/textViewLabel2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="수심"
+                    android:text="소음"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />

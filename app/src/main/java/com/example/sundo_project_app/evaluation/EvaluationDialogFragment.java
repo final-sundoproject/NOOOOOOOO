@@ -87,7 +87,7 @@ public class EvaluationDialogFragment extends DialogFragment {
                             evaluation.setEvaluationId((jsonObject.getLong("evaluationId")));
 
 
-                                                        evaluationList.add(evaluation);
+                            evaluationList.add(evaluation);
                         }
 
                         evaluationAdapter.notifyDataSetChanged();
