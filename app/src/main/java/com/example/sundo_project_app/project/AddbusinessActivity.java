@@ -1,6 +1,7 @@
 package com.example.sundo_project_app.project;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,12 +34,20 @@ public class AddbusinessActivity extends AppCompatActivity {
     private ProjectAdapter projectAdapter;
     private List<Project> projectList = new ArrayList<>();
     private ProjectApi apiService;
-    private Long companyCode = 2L;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
+    private Long companyCode;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_business);
+
+        // Intent에서 companyCode를 가져옴
+        Intent intent = getIntent();
+        companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정
+        if (companyCode == -1) {
+            Toast.makeText(this, "유효하지 않은 회사 코드입니다.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
