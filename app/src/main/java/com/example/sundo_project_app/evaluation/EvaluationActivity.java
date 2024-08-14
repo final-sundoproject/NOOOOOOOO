@@ -35,6 +35,9 @@ public class EvaluationActivity extends AppCompatActivity {
     private NestedScrollView nestedScrollView;
     private static final String LINE_FEED = "\r\n";
     private static final String BOUNDARY = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+    private SeekBar[] seekBars;
+    private TextView[] textViews;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,65 @@ public class EvaluationActivity extends AppCompatActivity {
         textViewObserver = findViewById(R.id.textViewObserver);
         nestedScrollView = findViewById(R.id.nestedScrollView);
 
+        seekBars = new SeekBar[] {
+                findViewById(R.id.seekBar1),
+                findViewById(R.id.seekBar2),
+                findViewById(R.id.seekBar3),
+                findViewById(R.id.seekBar4)
+        };
+
+        textViews = new TextView[] {
+                findViewById(R.id.textViewLabel1),
+                findViewById(R.id.textViewLabel2),
+                findViewById(R.id.textViewLabel3),
+                findViewById(R.id.textViewLabel4)
+        };
+
+
+        initializeTextViews();
+        attachSeekBarListeners();
+
         btnSubmit.setOnClickListener(v -> submitEvaluation());
+    }
+
+
+    private void initializeTextViews() {
+        for (int i = 0; i < textViews.length; i++) {
+            textViews[i].setText(getLabelForIndex(i));
+        }
+    }
+
+    private void attachSeekBarListeners() {
+        for (int i = 0; i < seekBars.length; i++) {
+            final int index = i;
+            seekBars[i].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    textViews[index].setText(getLabelForIndex(index) + " : " + progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
+        }
+    }
+
+    private String getLabelForIndex(int index) {
+        switch (index) {
+            case 0:
+                return "풍속";
+            case 1:
+                return "소음";
+            case 2:
+                return "가시성";
+            case 3:
+                return "수심";
+            default:
+                return "";
+        }
     }
 
     private void submitEvaluation() {
@@ -65,7 +126,7 @@ public class EvaluationActivity extends AppCompatActivity {
         executor.execute(() -> {
             String result = null;
             try {
-                URL url = new URL("http://10.0.2.2:8080/evaluation");
+                URL url = new URL("http://10.0.2.2:8000/evaluation");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
@@ -108,7 +169,7 @@ public class EvaluationActivity extends AppCompatActivity {
     private void addFormField(DataOutputStream request, String fieldName, String fieldValue) throws Exception {
         request.writeBytes("--" + BOUNDARY + LINE_FEED);
         request.writeBytes("Content-Disposition: form-data; name=\"" + fieldName + "\"" + LINE_FEED);
-        request.writeBytes("Content-Type: text/plain; charset=UTF-8" + LINE_FEED); // charset=UTF-8 추가
+        request.writeBytes("Content-Type: application/json; charset=UTF-8" + LINE_FEED); // charset=UTF-8 추가
         request.writeBytes(LINE_FEED);
         request.writeBytes(new String(fieldValue.getBytes("UTF-8"), "ISO-8859-1") + LINE_FEED); // UTF-8로 인코딩
     }
@@ -145,3 +206,4 @@ public class EvaluationActivity extends AppCompatActivity {
         return file;
     }
 }
+
