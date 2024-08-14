@@ -82,7 +82,7 @@ public class MapActivity extends AppCompatActivity {
             choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
         });
 
-        // AR 확인 버튼 클릭 리스너
+    // AR 확인 버튼 클릭 리스너
         findViewById(R.id.arCheck).setOnClickListener(v -> {
             Intent intent = new Intent(MapActivity.this, GeneratorActivity.class);
             startActivity(intent);
@@ -154,6 +154,7 @@ public class MapActivity extends AppCompatActivity {
 
     // 현재 위치 가져오기
     private void getCurrentLocation() {
+
         if (!hasLocationPermissions()) {
             requestLocationPermissions();
             return;
@@ -245,4 +246,4 @@ public class MapActivity extends AppCompatActivity {
             }
         }
     }
-}
+
