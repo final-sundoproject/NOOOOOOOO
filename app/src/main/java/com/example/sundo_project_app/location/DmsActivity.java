@@ -28,6 +28,10 @@ public class DmsActivity extends AppCompatActivity {
     private EditText etLatitudeDegrees, etLatitudeMinutes, etLatitudeSeconds, etLatitudeDirection;
     private EditText etLongitudeDegrees, etLongitudeMinutes, etLongitudeSeconds, etLongitudeDirection;
     private Button btnSubmit;
+    private String projectId="1"; // projectId를 멤버 변수로 선언
+
+    // 변경할 서버 URL
+    private static final String SERVER_URL = "http://10.0.2.2:8000/location";
 
     // locationId 변수를 멤버 변수로 선언
     private String locationId;
@@ -49,6 +53,10 @@ public class DmsActivity extends AppCompatActivity {
         etLongitudeDirection = findViewById(R.id.et_longitude_direction);
 
         btnSubmit = findViewById(R.id.btn_submit);
+
+        // Intent에서 projectId 가져오기
+        //Intent intent = getIntent();
+        //projectId = intent.getStringExtra("projectId"); // projectId 가져오기
 
         // 버튼 클릭 리스너 설정
         btnSubmit.setOnClickListener(v -> handleSubmit());
@@ -87,6 +95,11 @@ public class DmsActivity extends AppCompatActivity {
             jsonObject.put("longitudeSeconds", longitudeSeconds);
             jsonObject.put("longitudeDirection", longitudeDirection);
 
+            // projectId가 존재할 경우에만 포함
+            if (projectId != null) {
+                jsonObject.put("projectId", projectId);
+            }
+
             // 서버로 데이터 전송
             sendCoordinates(jsonObject.toString());
 
@@ -108,7 +121,7 @@ public class DmsActivity extends AppCompatActivity {
         executor.execute(() -> {
             String result = null;
             try {
-                URL url = new URL("http://10.0.2.2:8000/location"); // 변경된 URL
+                URL url = new URL(SERVER_URL + "/" + projectId);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; utf-8");

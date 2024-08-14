@@ -29,6 +29,7 @@ public class DdActivity extends AppCompatActivity {
     private EditText etlongitude;
     private Button btnSubmit;
     private String locationId;
+    private String projectId = "1"; // projectId를 1로 설정
 
     private static final String TAG = "DdActivity";
     private static final String SERVER_URL = "http://10.0.2.2:8000/location"; // 변경할 서버 URL
@@ -42,7 +43,7 @@ public class DdActivity extends AppCompatActivity {
         etlongitude = findViewById(R.id.et_longitude);
         btnSubmit = findViewById(R.id.btn_submit);
 
-        // Intent에서 위도와 경도를 가져와 EditText에 설정
+        // Intent에서 위도, 경도 가져오기
         Intent intent = getIntent();
         double latitude = intent.getDoubleExtra("latitude", 0);
         double longitude = intent.getDoubleExtra("longitude", 0);
@@ -63,6 +64,11 @@ public class DdActivity extends AppCompatActivity {
             jsonObject.put("latitude", latitude);
             jsonObject.put("longitude", longitude);
 
+            // projectId가 존재할 경우에만 포함
+            if (projectId != null) {
+                jsonObject.put("projectId", projectId);
+            }
+
             // 서버로 데이터 전송
             sendCoordinates(jsonObject.toString());
 
@@ -80,13 +86,14 @@ public class DdActivity extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         Log.d(TAG, "jsonData: " + jsonData);
+        Log.d(TAG, "projectId: " + projectId);
 
         executor.execute(() -> {
             String result = null;
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             try {
-                URL url = new URL(SERVER_URL);
+                URL url = new URL(SERVER_URL + "/" + projectId);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -106,8 +113,17 @@ public class DdActivity extends AppCompatActivity {
                     while ((line = reader.readLine()) != null) {
                         responseBuilder.append(line);
                     }
-                    locationId = responseBuilder.toString();
-                    result = "좌표가 성공적으로 전송되었습니다.";
+                    String response = responseBuilder.toString();
+                    Log.d(TAG, "Response from server: " + response);
+
+                    // 서버로부터 locationId 수신 (중복된 경우 "DUPLICATE"라는 문자열을 반환한다고 가정)
+                    if ("DUPLICATE".equals(response)) {
+                        result = "입력하신 좌표는 이미 존재합니다.";
+                        locationId = null; // locationId가 중복된 경우 null로 설정
+                    } else {
+                        locationId = response;
+                        result = "좌표가 성공적으로 전송되었습니다.";
+                    }
                 } else {
                     result = "서버 오류가 발생했습니다. 응답 코드: " + responseCode;
                 }
