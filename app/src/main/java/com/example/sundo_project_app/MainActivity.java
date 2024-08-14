@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
-
+    //
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
 
