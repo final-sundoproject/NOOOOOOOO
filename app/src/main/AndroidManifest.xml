@@ -53,12 +53,13 @@
             </intent-filter>
         </activity>
 
-   
-        <activity
 
-            android:name=".location.MapActivity"
+        <activity android:name=".location.MapActivity"
             android:exported="true">
-            <!-- intent-filter 제거 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity

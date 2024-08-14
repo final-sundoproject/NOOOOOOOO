@@ -1,14 +1,24 @@
 package com.example.sundo_project_app.location;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.sundo_project_app.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.overlay.Marker;
@@ -21,8 +31,13 @@ public class MapActivity extends AppCompatActivity {
     private NaverMap naverMap;
     private boolean isMarkerEnabled = false; // 마커 추가 모드 상태
     private Button coordinateSelectButton;
-    private Button resetButton; // 뒤로 버튼
+    private Button resetButton; // 초기화 버튼
+    private Button gpsButton; // GPS 버튼
     private List<Marker> markers; // 마커 리스트
+
+    private FusedLocationProviderClient fusedLocationClient;
+    private Handler handler; // Handler를 사용하여 주기적으로 작업 수행
+    private Runnable locationUpdateRunnable; // 위치 업데이트를 위한 Runnable
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +47,10 @@ public class MapActivity extends AppCompatActivity {
         // 마커 리스트 초기화
         markers = new ArrayList<>();
 
+        // 위치 서비스 클라이언트 초기화
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        handler = new Handler(); // Handler 초기화
+
         // MapFragment 설정
         MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
         if (mapFragment != null) {
@@ -40,8 +59,8 @@ public class MapActivity extends AppCompatActivity {
 
         // 좌표 입력 버튼 클릭 리스너
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
-            Intent intent = new Intent(MapActivity.this, DdActivity.class);
-            startActivity(intent);
+            ChoiceCooridate choiceCoordinateDialog = new ChoiceCooridate();
+            choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
         });
 
         // AR 확인 버튼 클릭 리스너
@@ -54,9 +73,13 @@ public class MapActivity extends AppCompatActivity {
         coordinateSelectButton = findViewById(R.id.coordinateSelect);
         coordinateSelectButton.setOnClickListener(v -> toggleMarkerMode());
 
-        // 뒤로 버튼 초기화
+        // 초기화 버튼 초기화
         resetButton = findViewById(R.id.resetButton);
         resetButton.setOnClickListener(v -> resetToInitialState()); // 초기 상태로 리셋하는 메서드 호출
+
+        // GPS 버튼 클릭 리스너
+        gpsButton = findViewById(R.id.gps);
+        gpsButton.setOnClickListener(v -> getCurrentLocation());
     }
 
     private void onMapReady(@NonNull NaverMap naverMap) {
@@ -105,6 +128,34 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    // 현재 위치 가져오기
+    private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            return;
+        }
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+                            // 현재 위치에 마커 추가
+                            Marker currentLocationMarker = new Marker();
+                            currentLocationMarker.setPosition(new LatLng(latitude, longitude));
+                            currentLocationMarker.setMap(naverMap);
+                            naverMap.setCameraPosition(new CameraPosition(new LatLng(latitude, longitude), 15)); // 현재 위치로 카메라 이동
+                            Toast.makeText(MapActivity.this, "현재 위치: " + latitude + ", " + longitude, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MapActivity.this, "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     // 초기 상태로 리셋
     private void resetToInitialState() {
         clearMarkers(); // 모든 마커 제거
@@ -120,5 +171,33 @@ public class MapActivity extends AppCompatActivity {
         }
         markers.clear(); // 리스트 초기화
         Toast.makeText(this, "모든 마커가 제거되었습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 위치 업데이트 중지
+        handler.removeCallbacks(locationUpdateRunnable);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 위치 업데이트 재개
+        // startLocationUpdates(); // GPS 버튼 클릭 시 위치 업데이트
+    }
+
+    // 권한 요청 결과 처리
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 승인되면 현재 위치 가져오기
+                getCurrentLocation();
+            } else {
+                Toast.makeText(this, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
