@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/permission_explanation"
-        android:layout_width="match_parent"
+        android:id="@+id/permissionExplanation"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="이 앱은 카메라 및 위치 권한이 필요합니다. 카메라를 사용하여 사진을 찍고, 위치 정보를 통해 맞춤형 서비스를 제공할 수 있습니다."
+        android:text="이 앱은 카메라 및 위치 권한이 필요합니다."
         android:textSize="16sp" />
 
     <Button
         android:id="@+id/btn_allow"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="허용" />
+        android:text="권한 허용"
+        android:layout_below="@id/permissionExplanation"
+        android:layout_marginTop="16dp"/>
 
     <Button
         android:id="@+id/btn_deny"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="거부" />
-</LinearLayout>
+        android:text="권한 거부"
+        android:layout_below="@id/btn_allow"
+        android:layout_marginTop="8dp"/>
+
+</RelativeLayout>
