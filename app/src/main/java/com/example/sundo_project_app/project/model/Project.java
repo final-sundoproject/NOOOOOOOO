@@ -78,4 +78,15 @@ public class Project implements Serializable {
     public void setChecked(boolean isChecked) {
         this.isChecked = isChecked;
     }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "projectId=" + projectId +
+                ", projectName='" + projectName + '\'' +
+                ", companyCode=" + companyCode +
+                ", registrationDate='" + registrationDate + '\'' +
+                ", isChecked=" + isChecked +
+                '}';
+    }
 }

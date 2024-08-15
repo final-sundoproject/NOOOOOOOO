@@ -62,7 +62,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
         // 항목 클릭 리스너 설정
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onItemClick(filteredProjectList);
+                onItemClickListener.onItemClick(project);
             }
         });
     }
@@ -118,6 +118,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
     }
 
     public interface OnItemClickListener {
-        void onItemClick(List<Project> projectList);
+        void onItemClick(Project project);
     }
 }

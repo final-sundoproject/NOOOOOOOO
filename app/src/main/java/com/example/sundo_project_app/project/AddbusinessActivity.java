@@ -38,6 +38,8 @@ public class AddbusinessActivity extends AppCompatActivity {
     private ProjectApi apiService;
     private Long companyCode;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
 
+    private String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,7 @@ public class AddbusinessActivity extends AppCompatActivity {
         // Intent에서 companyCode를 가져옴
         Intent intent = getIntent();
         companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정
+        token = intent.getStringExtra("token");
         if (companyCode == -1) {
             Toast.makeText(this, "유효하지 않은 회사 코드입니다.", Toast.LENGTH_SHORT).show();
             finish();
@@ -97,10 +100,10 @@ public class AddbusinessActivity extends AppCompatActivity {
 
     }
 
-    private void onProjectItemClick(List<Project> projects) {
+    private void onProjectItemClick(Project projects) {
         Intent mapIntent = new Intent(AddbusinessActivity.this, MapActivity.class);
-        mapIntent.putExtra("project", (Serializable) projects);
-        mapIntent.putExtra("companyCode", companyCode);
+        mapIntent.putExtra("project",projects);
+        mapIntent.putExtra("token", token);
         startActivity(mapIntent);
     }
 
