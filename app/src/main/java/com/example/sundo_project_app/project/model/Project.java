@@ -1,6 +1,8 @@
 package com.example.sundo_project_app.project.model;
 
-public class Project {
+import java.io.Serializable;
+
+public class Project implements Serializable {
 
     // 프로젝트의 고유 ID
     private Long projectId;

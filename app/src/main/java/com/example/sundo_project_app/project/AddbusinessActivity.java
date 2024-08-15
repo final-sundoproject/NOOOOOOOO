@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.location.MapActivity;
 import com.example.sundo_project_app.project.api.ProjectApi;
 import com.example.sundo_project_app.project.model.Project;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +54,10 @@ public class AddbusinessActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        projectAdapter = new ProjectAdapter(projectList);
+//        projectAdapter = new ProjectAdapter(projectList);
+//        recyclerView.setAdapter(projectAdapter);
+
+        projectAdapter = new ProjectAdapter(projectList, this::onProjectItemClick);
         recyclerView.setAdapter(projectAdapter);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -88,6 +93,15 @@ public class AddbusinessActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
+
+
+    }
+
+    private void onProjectItemClick(List<Project> projects) {
+        Intent mapIntent = new Intent(AddbusinessActivity.this, MapActivity.class);
+        mapIntent.putExtra("project", (Serializable) projects);
+        mapIntent.putExtra("companyCode", companyCode);
+        startActivity(mapIntent);
     }
 
     private void loadProjects() {
