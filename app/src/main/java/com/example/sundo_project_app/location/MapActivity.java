@@ -1,6 +1,7 @@
 package com.example.sundo_project_app.location;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -8,10 +9,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -46,10 +49,14 @@ public class MapActivity extends AppCompatActivity {
     private Button btnShowDialog;
     private Button btnShowList;
 
+    private String registerName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+
+        showEvaluatorNameDialog();
 
         Intent projectIntent = getIntent();
         Bundle extras = projectIntent.getExtras();
@@ -92,6 +99,8 @@ public class MapActivity extends AppCompatActivity {
         btnShowList.setOnClickListener(v -> {
             Log.d("btnShowList", "평가입력 버튼 클릭됨");
             Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
+            intent.putExtra("project",currentProject);
+            intent.putExtra("registerName",registerName);
             startActivity(intent);
         });
 
@@ -119,6 +128,33 @@ public class MapActivity extends AppCompatActivity {
         gpsButton = findViewById(R.id.gps);
         gpsButton.setOnClickListener(v -> getCurrentLocation());
     }
+
+
+    // 평가자 이름 입력 대화 상자 표시
+    private void showEvaluatorNameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("평가자 이름 입력");
+
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                registerName = input.getText().toString();
+                if (registerName.isEmpty()) {
+                    Toast.makeText(MapActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    showEvaluatorNameDialog();
+                } else {
+                    Toast.makeText(MapActivity.this, "환영합니다, " + registerName + "님!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setCancelable(false);
+        builder.show();
+    }
+
 
     private void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;

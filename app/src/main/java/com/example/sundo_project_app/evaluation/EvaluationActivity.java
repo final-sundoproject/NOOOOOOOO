@@ -1,5 +1,6 @@
 package com.example.sundo_project_app.evaluation;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.project.model.Project;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -37,12 +39,21 @@ public class EvaluationActivity extends AppCompatActivity {
     private static final String BOUNDARY = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
     private SeekBar[] seekBars;
     private TextView[] textViews;
+    private TextView viewDate;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.evaluation);
+
+        Intent intent = getIntent();
+
+        Project currentProject = (Project) intent.getSerializableExtra("project");
+        String registerName = intent.getStringExtra("registerName");
+
+        Log.d("currentProject: {}", String.valueOf(currentProject));
+        Log.d("registerName: {}", String.valueOf(registerName));
 
         seekBar1 = findViewById(R.id.seekBar1);
         seekBar2 = findViewById(R.id.seekBar2);
@@ -52,6 +63,14 @@ public class EvaluationActivity extends AppCompatActivity {
         textViewName = findViewById(R.id.textViewName);
         textViewObserver = findViewById(R.id.textViewObserver);
         nestedScrollView = findViewById(R.id.nestedScrollView);
+        viewDate = findViewById(R.id.textViewDate);
+
+        TextView textViewName = findViewById(R.id.textViewName);
+        if (currentProject != null) {
+            textViewName.setText(currentProject.getProjectName());
+            viewDate.setText(currentProject.getRegistrationDate());
+            textViewObserver.setText(registerName);
+        }
 
         seekBars = new SeekBar[] {
                 findViewById(R.id.seekBar1),
