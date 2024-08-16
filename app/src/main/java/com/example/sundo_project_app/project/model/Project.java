@@ -1,6 +1,8 @@
 package com.example.sundo_project_app.project.model;
 
-public class Project {
+import java.io.Serializable;
+
+public class Project implements Serializable {
 
     // 프로젝트의 고유 ID
     private Long projectId;
@@ -75,5 +77,16 @@ public class Project {
 
     public void setChecked(boolean isChecked) {
         this.isChecked = isChecked;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "projectId=" + projectId +
+                ", projectName='" + projectName + '\'' +
+                ", companyCode=" + companyCode +
+                ", registrationDate='" + registrationDate + '\'' +
+                ", isChecked=" + isChecked +
+                '}';
     }
 }

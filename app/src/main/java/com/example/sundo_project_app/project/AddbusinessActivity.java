@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.location.MapActivity;
 import com.example.sundo_project_app.project.api.ProjectApi;
 import com.example.sundo_project_app.project.model.Project;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,8 @@ public class AddbusinessActivity extends AppCompatActivity {
     private ProjectApi apiService;
     private Long companyCode;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
 
+    private String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,7 @@ public class AddbusinessActivity extends AppCompatActivity {
         // Intent에서 companyCode를 가져옴
         Intent intent = getIntent();
         companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정
+        token = intent.getStringExtra("token");
         if (companyCode == -1) {
             Toast.makeText(this, "유효하지 않은 회사 코드입니다.", Toast.LENGTH_SHORT).show();
             finish();
@@ -52,7 +57,10 @@ public class AddbusinessActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        projectAdapter = new ProjectAdapter(projectList);
+//        projectAdapter = new ProjectAdapter(projectList);
+//        recyclerView.setAdapter(projectAdapter);
+
+        projectAdapter = new ProjectAdapter(projectList, this::onProjectItemClick);
         recyclerView.setAdapter(projectAdapter);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -88,6 +96,15 @@ public class AddbusinessActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
+
+
+    }
+
+    private void onProjectItemClick(Project projects) {
+        Intent mapIntent = new Intent(AddbusinessActivity.this, MapActivity.class);
+        mapIntent.putExtra("project",projects);
+        mapIntent.putExtra("token", token);
+        startActivity(mapIntent);
     }
 
     private void loadProjects() {
