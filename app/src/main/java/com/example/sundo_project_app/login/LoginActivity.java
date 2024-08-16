@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sundo_project_app.MainActivity;
 import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.project.AddbusinessActivity;
+import com.example.sundo_project_app.login.PasswordFindActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button signUpButton;
 
     private TextView findEmailLink;
+    private TextView findPasswordLink;
 
     private static final String LOGIN_URL = "http://10.0.2.2:8000/api/companies/login"; // 서버의 로그인 엔드포인트
 
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         signUpButton = findViewById(R.id.signupButton);
         findEmailLink = findViewById(R.id.findEmailLink);
+        findPasswordLink = findViewById(R.id.findPasswordLink);
 
         // 자동 로그인 설정 확인
         checkAutoLogin();
@@ -76,6 +79,13 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, EmailFindActivity.class);
             startActivity(intent);
         });
+        findPasswordLink.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, PasswordFindActivity.class);
+            startActivity(intent);
+        });
+
+
+
     }
 
     private void login(String email, String password) {
