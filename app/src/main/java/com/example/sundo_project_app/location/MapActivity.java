@@ -45,6 +45,7 @@ public class MapActivity extends AppCompatActivity {
     private Runnable locationUpdateRunnable; // 위치 업데이트를 위한 Runnable
     private Button btnShowDialog;
     private Button btnShowList;
+    private String projectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,10 @@ public class MapActivity extends AppCompatActivity {
         }
 
         Project currentProject = (Project) extras.getSerializable("project");
+        Log.d("projectId", "projectId: " + currentProject.getProjectId().toString());
+        if (currentProject != null) {
+            projectId = currentProject.getProjectId().toString();
+        }
 
         TextView projectNameTextView = findViewById(R.id.textBox3);
         if (currentProject != null) {
@@ -97,8 +102,12 @@ public class MapActivity extends AppCompatActivity {
 
         // 좌표 입력 버튼 클릭 리스너
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
-            ChoiceCooridate choiceCoordinateDialog = new ChoiceCooridate();
-            choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
+            if (projectId != null) {
+                ChoiceCooridate choiceCoordinateDialog = ChoiceCooridate.newInstance(projectId);
+                choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
+            } else {
+                Toast.makeText(MapActivity.this, "Project ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         // AR 확인 버튼 클릭 리스너
