@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="16dp"
     android:layout_gravity="bottom|center"
     android:elevation="4dp"
     android:layout_margin="16dp">
 
+    <!-- 위도와 경도 입력 필드들 -->
     <LinearLayout
+        android:id="@+id/ll_coordinates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="2"
-        android:padding="8dp">
+        android:padding="8dp" >
 
+        <!-- X 버튼 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -32,8 +34,8 @@
                 android:id="@+id/et_latitude_degrees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:hint="0.0" />
+                android:hint="0.0"
+                android:inputType="numberDecimal" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,8 +47,8 @@
                 android:id="@+id/et_latitude_minutes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:hint="0.0" />
+                android:hint="0.0"
+                android:inputType="numberDecimal" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,8 +60,8 @@
                 android:id="@+id/et_latitude_seconds"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:hint="0.0" />
+                android:hint="0.0"
+                android:inputType="numberDecimal" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -136,6 +138,18 @@
                 android:inputType="text"
                 android:maxLength="1" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:text="x"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <Button
@@ -143,6 +157,9 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@color/sundo_green_light"
         android:text="좌표 등록"
-        android:layout_marginTop="16dp"/>
-</LinearLayout>
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/ll_coordinates"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>
