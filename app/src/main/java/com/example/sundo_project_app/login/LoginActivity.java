@@ -3,15 +3,13 @@ package com.example.sundo_project_app.login;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sundo_project_app.MainActivity;
 import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.project.AddbusinessActivity;
 
@@ -22,11 +20,11 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.MediaType;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,7 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView findEmailLink;
 
 
-    private static final String LOGIN_URL = "http://10.0.2.2:8080/api/companies/login"; // 서버의 로그인 엔드포인트
+
+    private static final String LOGIN_URL = "http://10.0.2.2:8000/api/companies/login"; // 서버의 로그인 엔드포인트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         autoLoginCheckbox = findViewById(R.id.autoLoginCheckbox);
         loginButton = findViewById(R.id.loginButton);
         signUpButton = findViewById(R.id.signupButton);
-        findEmailLink = findViewById(R.id.findEmailLink);
 
         // 자동 로그인 설정 확인
         checkAutoLogin();
@@ -73,15 +71,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
-
-        findEmailLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, EmailFindActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
     private void login(String email, String password) {
@@ -109,7 +98,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
+
+                    Log.d("LoginResponse", "Response: " + responseBody);
                     String token = extractTokenFromResponse(responseBody);
+                    Long companyCode = extractCompanyCodeFromResponse(responseBody);
 
                     if (autoLoginCheckbox.isChecked()) {
                         // 자동 로그인 설정을 저장
@@ -118,14 +110,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     runOnUiThread(() -> {
                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                        // 메인 화면으로 이동
+
+
+
+                        // AddbusinessActivity로 이동하면서 companyCode 전달
                         Intent intent = new Intent(LoginActivity.this, AddbusinessActivity.class);
-
-                        // companyCode 전달
-                        long companyCode = extractCompanyCodeFromResponse(responseBody); // 서버 응답에서 companyCode를 추출하는 메서드
                         intent.putExtra("companyCode", companyCode);
-
-
+                        intent.putExtra("token", token); // 필요시 토큰도 함께 전달
                         startActivity(intent);
                         finish();
                     });
@@ -183,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // 토큰 검증 성공: 메인 화면으로 이동
                     runOnUiThread(() -> {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, AddbusinessActivity.class);
                         startActivity(intent);
                         finish();
                     });
@@ -214,7 +205,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private long extractCompanyCodeFromResponse(String responseBody) {
+    private Long 
+      
+      
+      
+      
+      
+      
+      (String responseBody) {
         try {
             JSONObject jsonObject = new JSONObject(responseBody);
             return jsonObject.getLong("companyCode");
@@ -224,3 +222,4 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 }
+

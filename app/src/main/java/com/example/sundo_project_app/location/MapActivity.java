@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,15 +18,16 @@ import androidx.core.app.ActivityCompat;
 import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.evaluation.EvaluationActivity;
 import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
+import com.example.sundo_project_app.project.model.Project;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.overlay.Marker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,23 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+
+        Intent projectIntent = getIntent();
+        Bundle extras = projectIntent.getExtras();
+
+        for (String key : extras.keySet()) {
+            Object value = extras.get(key);
+            Log.d("IntentExtras", "Key: " + key + ", Value: " + value);
+        }
+
+        Project currentProject = (Project) extras.getSerializable("project");
+
+        TextView projectNameTextView = findViewById(R.id.textBox3);
+        if (currentProject != null) {
+            String currentProjectName = currentProject.getProjectName();
+            projectNameTextView.setText(currentProjectName);
+        }
+
 
         // 마커 리스트 초기화
         markers = new ArrayList<>();

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.project.model.Project;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,12 +21,14 @@ import java.util.Locale;
 
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
 
-    private List<Project> projectList = new ArrayList<>();
-    private List<Project> filteredProjectList = new ArrayList<>(); // 필터링된 리스트
+    private List<Project> projectList;
+    private List<Project> filteredProjectList; // 필터링된 리스트
+    private OnItemClickListener onItemClickListener;
 
-    public ProjectAdapter(List<Project> projectList) {
+    public ProjectAdapter(List<Project> projectList, OnItemClickListener onItemClickListener) {
         this.projectList = new ArrayList<>(projectList);
         this.filteredProjectList = new ArrayList<>(projectList); // 초기에는 원본 데이터와 동일
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -39,12 +42,12 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Project project = filteredProjectList.get(position);
         holder.projectNameTextView.setText(project.getProjectName());
-        holder.registrationDateTextView.setText(project.getRegistrationDate());
-        holder.projectCheckBox.setChecked(project.isChecked());
 
         // 날짜를 원하는 형식으로 변환
         String formattedDate = formatDateString(project.getRegistrationDate());
         holder.registrationDateTextView.setText("등록 일자: " + formattedDate);
+
+        holder.projectCheckBox.setChecked(project.isChecked());
 
         // CheckBox의 클릭 이벤트를 설정합니다.
         holder.projectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -56,6 +59,12 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
             holder.projectCheckBox.setChecked(!holder.projectCheckBox.isChecked());
         });
 
+        // 항목 클릭 리스너 설정
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(project);
+            }
+        });
     }
 
     private String formatDateString(String dateString) {
@@ -64,7 +73,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
             SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy년 M월 d일 a h시 mm분", Locale.getDefault());
             Date date = originalFormat.parse(dateString);
             return targetFormat.format(date);
-        } catch (Exception e) {
+        } catch (ParseException e) {
             e.printStackTrace();
             return dateString;  // 변환에 실패하면 원래 문자열 반환
         }
@@ -106,5 +115,9 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
             registrationDateTextView = itemView.findViewById(R.id.registrationDate);
             projectCheckBox = itemView.findViewById(R.id.projectCheckBox);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Project project);
     }
 }
