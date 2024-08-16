@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.R;
@@ -34,6 +33,10 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox autoLoginCheckbox;
     private Button loginButton;
     private Button signUpButton;
+
+    private TextView findEmailLink;
+
+
 
     private static final String LOGIN_URL = "http://10.0.2.2:8000/api/companies/login"; // 서버의 로그인 엔드포인트
 
@@ -61,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 login(email, password);
             }
         });
+
 
         signUpButton.setOnClickListener(view -> {
             // SignUpActivity로 이동
@@ -94,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
+
                     Log.d("LoginResponse", "Response: " + responseBody);
                     String token = extractTokenFromResponse(responseBody);
                     Long companyCode = extractCompanyCodeFromResponse(responseBody);
@@ -105,6 +110,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     runOnUiThread(() -> {
                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
+
+
+
                         // AddbusinessActivity로 이동하면서 companyCode 전달
                         Intent intent = new Intent(LoginActivity.this, AddbusinessActivity.class);
                         intent.putExtra("companyCode", companyCode);
@@ -196,13 +204,22 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private Long extractCompanyCodeFromResponse(String responseBody) {
+
+    private Long 
+      
+      
+      
+      
+      
+      
+      (String responseBody) {
         try {
             JSONObject jsonObject = new JSONObject(responseBody);
             return jsonObject.getLong("companyCode");
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
+            return -1; // 기본값으로 잘못된 값을 반환
         }
     }
 }
+
