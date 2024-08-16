@@ -9,20 +9,21 @@
     android:layout_margin="16dp">
 
     <!-- X 버튼 -->
+
+    <!-- 위도 텍스트뷰 -->
+
     <TextView
         android:id="@+id/btn_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="8dp"
-        android:text="x"
-        android:textStyle="bold"
-        android:textSize="20dp"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
         android:clickable="true"
-        android:background="@android:color/transparent" />
+        android:text="x"
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
-    <!-- 위도 텍스트뷰 -->
     <TextView
         android:id="@+id/tv_latitude_label"
         android:layout_width="match_parent"
