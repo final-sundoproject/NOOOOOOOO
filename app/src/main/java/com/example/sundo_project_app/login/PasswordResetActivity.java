@@ -91,13 +91,17 @@ public class PasswordResetActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                String responseBody = response.body().string();
+                Log.d("PasswordReset", "Response code: " + response.code());
+                Log.d("PasswordReset", "Response body: " + responseBody);
+
                 if (response.isSuccessful()) {
                     runOnUiThread(() -> {
                         Toast.makeText(PasswordResetActivity.this, "비밀번호 재설정 성공", Toast.LENGTH_SHORT).show();
                         finish();
                     });
                 } else {
-                    runOnUiThread(() -> Toast.makeText(PasswordResetActivity.this, "비밀번호 재설정 실패", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(PasswordResetActivity.this, "비밀번호 재설정 실패: " + responseBody, Toast.LENGTH_SHORT).show());
                 }
             }
         });
