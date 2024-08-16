@@ -58,6 +58,9 @@ public class ChoiceCooridate extends DialogFragment {
             });
         }
 
+        // 'x' 버튼 클릭 리스너 추가
+        view.findViewById(R.id.btn_close).setOnClickListener(v -> dismiss());
+
         return view;
     }
 }

@@ -54,6 +54,9 @@ public class DmsActivity extends AppCompatActivity {
 
         btnSubmit = findViewById(R.id.btn_submit);
 
+        // X 버튼을 눌렀을 때 창을 닫는 기능 추가
+        findViewById(R.id.btn_close).setOnClickListener(v -> finish());
+
         Intent intent = getIntent();
         projectId = intent.getStringExtra("project_id"); // Intent에서 projectId를 가져옴
 

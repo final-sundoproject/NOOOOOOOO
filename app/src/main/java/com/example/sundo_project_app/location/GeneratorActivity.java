@@ -39,6 +39,10 @@ public class GeneratorActivity extends AppCompatActivity {
         doosanButton = findViewById(R.id.doosan_select_button);
         unisonButton = findViewById(R.id.unison_select_button);
 
+
+        // X 버튼을 눌렀을 때 창을 닫는 기능 추가
+        findViewById(R.id.close_button).setOnClickListener(v -> finish());
+
         // Intent에서 locationId 받기
         locationId = getIntent().getStringExtra("locationId");
         if (locationId != null) {

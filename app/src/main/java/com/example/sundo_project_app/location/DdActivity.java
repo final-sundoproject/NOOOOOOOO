@@ -47,6 +47,9 @@ public class DdActivity extends AppCompatActivity {
         etlongitude = findViewById(R.id.et_longitude);
         btnSubmit = findViewById(R.id.btn_submit);
 
+        // X 버튼을 눌렀을 때 창을 닫는 기능 추가
+        findViewById(R.id.btn_close).setOnClickListener(v -> finish());
+
         // Intent에서 위도, 경도, projectId 가져오기
         Intent intent = getIntent();
         double latitude = intent.getDoubleExtra("latitude", 0);
