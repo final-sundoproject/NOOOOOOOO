@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +37,9 @@ public class DmsActivity extends AppCompatActivity {
 
     // locationId 변수를 멤버 변수로 선언
     private String locationId;
+
+    private Serializable currentProject;
+    private String registerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +60,10 @@ public class DmsActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btn_submit);
 
         // Intent에서 projectId 가져오기
-        //Intent intent = getIntent();
+        Intent intent = getIntent();
         //projectId = intent.getStringExtra("projectId"); // projectId 가져오기
+        currentProject =  intent.getSerializableExtra("currentProject");
+        registerName = intent.getStringExtra("registerName");
 
         // 버튼 클릭 리스너 설정
         btnSubmit.setOnClickListener(v -> handleSubmit());
@@ -162,8 +168,13 @@ public class DmsActivity extends AppCompatActivity {
                 if (locationId != null) {
                     Intent intent = new Intent(DmsActivity.this, GeneratorActivity.class);
                     intent.putExtra("locationId", locationId); // locationId를 전달
+                    intent.putExtra("currentProject",currentProject);
+                    intent.putExtra("registerName",registerName);
+                    Log.d("currentProject","currentProject: "+currentProject);
+                    Log.d("registerName","registerName: "+registerName);
                     Log.d("location","locationID: "+locationId);
                     Log.d("locationId", "locationId: " + locationId); // jsonData 값을 로그로 출력
+                    startActivity(intent);
                 }
             });
         });
