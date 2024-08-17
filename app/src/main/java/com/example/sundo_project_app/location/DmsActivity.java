@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.evaluation.EvaluationActivity;
 
 import org.json.JSONObject;
 
@@ -161,7 +162,7 @@ public class DmsActivity extends AppCompatActivity {
                 if (locationId != null) {
                     Intent intent = new Intent(DmsActivity.this, GeneratorActivity.class);
                     intent.putExtra("locationId", locationId); // locationId를 전달
-                    startActivity(intent);
+                    Log.d("location","locationID: "+locationId);
                     Log.d("locationId", "locationId: " + locationId); // jsonData 값을 로그로 출력
                 }
             });

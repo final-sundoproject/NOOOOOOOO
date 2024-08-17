@@ -24,6 +24,7 @@ import com.example.sundo_project_app.project.model.Project;
 import java.io.DataOutputStream;
 import java.io.File;
 
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -41,6 +42,8 @@ public class EvaluationActivity extends AppCompatActivity {
     private TextView[] textViews;
     private TextView viewDate;
 
+    private String locationId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +52,11 @@ public class EvaluationActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        Project currentProject = (Project) intent.getSerializableExtra("project");
+        locationId = intent.getStringExtra("locationId");
+        Project currentProject = (Project) intent.getSerializableExtra("currentProject");
         String registerName = intent.getStringExtra("registerName");
 
+        Log.d("locationId: {}", String.valueOf(locationId));
         Log.d("currentProject: {}", String.valueOf(currentProject));
         Log.d("registerName: {}", String.valueOf(registerName));
 
@@ -163,6 +168,7 @@ public class EvaluationActivity extends AppCompatActivity {
                     addFormField(request, "noiseLevel", String.valueOf(score2));
                     addFormField(request, "scenery", String.valueOf(score3));
                     addFormField(request, "waterDepth", String.valueOf(score4));
+                    addFormField(request, "locationId", locationId);
 
                     request.writeBytes("--" + BOUNDARY + "--" + LINE_FEED);
                     request.flush();
