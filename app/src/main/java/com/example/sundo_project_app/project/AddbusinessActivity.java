@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,8 @@ public class AddbusinessActivity extends AppCompatActivity {
         companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정
         token = intent.getStringExtra("token");
         if (companyCode == -1) {
+            Log.d("companyCode: {}, " , String.valueOf(companyCode));
+            Log.d("token: {}, " , String.valueOf(token));
             Toast.makeText(this, "유효하지 않은 회사 코드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
