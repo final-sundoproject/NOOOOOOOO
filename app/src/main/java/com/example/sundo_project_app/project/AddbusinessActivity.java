@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +42,8 @@ public class AddbusinessActivity extends AppCompatActivity {
 
     private String token;
 
+    private TextView noResultsTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,7 @@ public class AddbusinessActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        noResultsTextView = findViewById(R.id.noResultsTextView);
 
 //        projectAdapter = new ProjectAdapter(projectList);
 //        recyclerView.setAdapter(projectAdapter);
@@ -92,6 +96,7 @@ public class AddbusinessActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 projectAdapter.filter(s.toString()); // 텍스트 변경 시 필터링 수행
+                updateNoResultsTextView();
             }
 
             @Override
@@ -101,6 +106,14 @@ public class AddbusinessActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void updateNoResultsTextView() {
+        if (projectAdapter.getItemCount() == 0) {
+            noResultsTextView.setVisibility(View.VISIBLE); // 결과가 없으면 보이게
+        } else {
+            noResultsTextView.setVisibility(View.GONE); // 결과가 있으면 숨기기
+        }
     }
 
     private void onProjectItemClick(Project projects) {
