@@ -52,6 +52,7 @@ public class MapActivity extends AppCompatActivity {
     private String registerName;
     private String projectId;
 
+    private String locationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +106,15 @@ public class MapActivity extends AppCompatActivity {
         });
 
         btnShowList.setOnClickListener(v -> {
-            Log.d("btnShowList", "평가입력 버튼 클릭됨");
-            Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
-//            intent.putExtra("project",currentProject);
-//            intent.putExtra("registerName",registerName);
-            startActivity(intent);
+            if (locationId != null) {
+                Log.d("btnShowList", "평가입력 버튼 클릭됨");
+                Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
+                // 필요한 데이터 전달
+                startActivity(intent);
+            } else {
+                Toast.makeText(MapActivity.this, "좌표 등록이 완료되지 않았습니다. 좌표를 등록해주세요.", Toast.LENGTH_SHORT).show();
+                btnShowList.setEnabled(false);
+            }
         });
 
         // 좌표 입력 버튼 클릭 리스너
