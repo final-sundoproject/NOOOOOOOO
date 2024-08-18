@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.evaluation.EvaluationActivity;
 
 import org.json.JSONObject;
 
@@ -167,7 +168,10 @@ public class DdActivity extends AppCompatActivity {
                 Toast.makeText(DdActivity.this, finalResult, Toast.LENGTH_LONG).show();
                 if (locationId != null) {
                     Intent intent = new Intent(DdActivity.this, GeneratorActivity.class);
+                    Intent DdIntent = new Intent(DdActivity.this, EvaluationActivity.class);
                     intent.putExtra("locationId", locationId);
+                    DdIntent.putExtra("locationId",locationId);
+                    Log.d("locaitonId","locaitonId: "+locationId);
                     startActivity(intent);
                     Log.d(TAG, "locationId: " + locationId);
                 }

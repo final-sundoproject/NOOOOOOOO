@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.evaluation.EvaluationActivity;
 
 import org.json.JSONObject;
 
@@ -184,7 +185,10 @@ public class DmsActivity extends AppCompatActivity {
                 // 좌표 등록이 완료되면 GeneratorActivity로 이동
                 if (locationId != null) {
                     Intent intent = new Intent(DmsActivity.this, GeneratorActivity.class);
+                    Intent DmsIntent = new Intent(DmsActivity.this, EvaluationActivity.class);
                     intent.putExtra("locationId", locationId); // locationId를 전달
+                    DmsIntent.putExtra("locationId",locationId);
+                    Log.d("locaitonId","locaitonId: "+locationId);
                     startActivity(intent);
                     Log.d(TAG, "locationId: " + locationId); // locationId 값을 로그로 출력
                 }

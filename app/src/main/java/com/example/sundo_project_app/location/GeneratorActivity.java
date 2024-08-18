@@ -1,5 +1,8 @@
 package com.example.sundo_project_app.location;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -9,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.evaluation.EvaluationActivity;
 
 import org.json.JSONObject;
 
@@ -38,7 +42,6 @@ public class GeneratorActivity extends AppCompatActivity {
         unisonAngleEditText = findViewById(R.id.unison_angle_edit_text);
         doosanButton = findViewById(R.id.doosan_select_button);
         unisonButton = findViewById(R.id.unison_select_button);
-
 
         // X 버튼을 눌렀을 때 창을 닫는 기능 추가
         findViewById(R.id.close_button).setOnClickListener(v -> finish());
@@ -123,7 +126,11 @@ public class GeneratorActivity extends AppCompatActivity {
                     String response = responseBuilder.toString();
                     Log.d("GeneratorActivity", "Response from server: " + response);
 
-                    runOnUiThread(() -> Toast.makeText(GeneratorActivity.this, generatorType + " 발전기가 선택되었습니다. 각도: " + directionAngle, Toast.LENGTH_SHORT).show());
+                    // Success - start EvaluationActivity with bundled data
+                    runOnUiThread(() -> {
+                        Toast.makeText(GeneratorActivity.this, generatorType + " 발전기가 선택되었습니다. 각도: " + directionAngle, Toast.LENGTH_SHORT).show();
+                        startEvaluationActivity(generatorType, directionAngle, locationId);
+                    });
                 } else {
                     runOnUiThread(() -> Toast.makeText(GeneratorActivity.this, "서버 오류 발생. 응답 코드: " + responseCode, Toast.LENGTH_SHORT).show());
                 }
@@ -133,6 +140,17 @@ public class GeneratorActivity extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(GeneratorActivity.this, "전송 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
+    }
+
+    private void startEvaluationActivity(String generatorType, double directionAngle, String locationId) {
+        Intent intent = new Intent(GeneratorActivity.this, EvaluationActivity.class);
+        intent.putExtra("generatorType", generatorType);
+        intent.putExtra("directionAngle", directionAngle);
+        intent.putExtra("locationId", locationId);
+
+        Log.d("GeneratorActivity", "generatorType: " + generatorType);
+        Log.d("GeneratorActivity", "directionAngle: " + directionAngle);
+        Log.d("GeneratorActivity", "locationId: " + locationId);
     }
 
     @Override
