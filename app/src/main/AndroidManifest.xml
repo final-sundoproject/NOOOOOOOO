@@ -90,6 +90,9 @@
 
         <activity android:name=".login.EmailFindActivity" />
 
+        <activity android:name=".login.PasswordFindActivity" />
+
+
         <activity
 
             android:name=".location.DdActivity"
