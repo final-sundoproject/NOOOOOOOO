@@ -28,7 +28,6 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.overlay.Marker;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
