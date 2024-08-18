@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputFilter;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.evaluation.EvaluationActivity;
 import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
 import com.example.sundo_project_app.project.model.Project;
+import com.example.sundo_project_app.utill.KoreanInputFilter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.naver.maps.geometry.LatLng;
@@ -156,6 +158,7 @@ public class MapActivity extends AppCompatActivity {
         builder.setTitle("평가자 이름 입력");
 
         final EditText input = new EditText(this);
+        input.setFilters(new InputFilter[]{new KoreanInputFilter()});
         builder.setView(input);
 
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -170,9 +173,15 @@ public class MapActivity extends AppCompatActivity {
                 }
             }
         });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 
-        builder.setCancelable(false);
-        builder.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 
