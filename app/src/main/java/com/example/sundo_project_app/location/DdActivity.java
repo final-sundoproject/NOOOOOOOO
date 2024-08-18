@@ -37,7 +37,7 @@ public class DdActivity extends AppCompatActivity {
     private String locationId;
 
     private static final String TAG = "DdActivity";
-    private static final String SERVER_URL = "http://10.0.2.2:8000/location"; // 변경할 서버 URL
+    private static final String SERVER_URL = "http://192.168.35.41:8000/location"; // 변경할 서버 URL
 
     private Serializable currentProject;
     private String registerName;

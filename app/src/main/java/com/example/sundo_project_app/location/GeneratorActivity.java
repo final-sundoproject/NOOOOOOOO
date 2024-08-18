@@ -106,7 +106,7 @@ public class GeneratorActivity extends AppCompatActivity {
                 Serializable currentProject = getIntent().getSerializableExtra("currentProject");
 
                 // URL 설정
-                URL url = new URL("http://10.0.2.2:8000/generator" + (locationId != null ? "/" + locationId : "/"+0));
+                URL url = new URL("http://192.168.35.41:8000/generator" + (locationId != null ? "/" + locationId : "/"+0));
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; utf-8");
