@@ -37,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button signUpButton;
 
     private TextView findEmailLink;
+    private TextView findPasswordLink;
+
 
     private Long companyCode;
 
@@ -53,7 +55,10 @@ public class LoginActivity extends AppCompatActivity {
         autoLoginCheckbox = findViewById(R.id.autoLoginCheckbox);
         loginButton = findViewById(R.id.loginButton);
         signUpButton = findViewById(R.id.signupButton);
+
         findEmailLink = findViewById(R.id.findEmailLink);
+        findPasswordLink = findViewById(R.id.findPasswordLink);
+
 
         // 자동 로그인 설정 확인
         checkAutoLogin();
@@ -77,6 +82,11 @@ public class LoginActivity extends AppCompatActivity {
 
         findEmailLink.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, EmailFindActivity.class);
+            startActivity(intent);
+        });
+
+        findPasswordLink.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, PasswordFindActivity.class);
             startActivity(intent);
         });
     }
