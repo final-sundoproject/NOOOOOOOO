@@ -54,9 +54,9 @@ public class MapActivity extends AppCompatActivity {
     private String projectId;
 
     private String registerName;
-    private String projectId;
 
     private String locationId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -326,6 +326,21 @@ public class MapActivity extends AppCompatActivity {
         super.onResume();
         // 위치 업데이트 재개
         // startLocationUpdates(); // GPS 버튼 클릭 시 위치 업데이트
+    }
+
+    private void addMarkerAtLocation(LatLng latLng) {
+        Marker marker = new Marker();
+        marker.setPosition(latLng);
+        marker.setMap(naverMap);
+        markers.add(marker);
+
+        marker.setOnClickListener(overlay -> {
+            Intent intent = new Intent(MapActivity.this, DdActivity.class);
+            intent.putExtra("latitude", latLng.latitude);
+            intent.putExtra("longitude", latLng.longitude);
+            startActivity(intent);
+            return true;
+        });
     }
 
     // 권한 요청 결과 처리
