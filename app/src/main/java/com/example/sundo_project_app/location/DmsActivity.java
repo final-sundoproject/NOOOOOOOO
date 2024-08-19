@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +37,9 @@ public class DmsActivity extends AppCompatActivity {
 
     // locationId 변수를 멤버 변수로 선언
     private String locationId;
+
+    private Serializable currentProject;
+    private String registerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,13 @@ public class DmsActivity extends AppCompatActivity {
 
         // 로그를 통해 projectId 확인
         Log.d(TAG, "Received projectId: " + projectId);
+
+        // Intent에서 projectId 가져오기
+        Intent intent = getIntent();
+        //projectId = intent.getStringExtra("projectId"); // projectId 가져오기
+        currentProject =  intent.getSerializableExtra("currentProject");
+        registerName = intent.getStringExtra("registerName");
+
 
         // 버튼 클릭 리스너 설정
         btnSubmit.setOnClickListener(v -> handleSubmit());
@@ -185,12 +196,15 @@ public class DmsActivity extends AppCompatActivity {
                 // 좌표 등록이 완료되면 GeneratorActivity로 이동
                 if (locationId != null) {
                     Intent intent = new Intent(DmsActivity.this, GeneratorActivity.class);
-                    Intent DmsIntent = new Intent(DmsActivity.this, EvaluationActivity.class);
                     intent.putExtra("locationId", locationId); // locationId를 전달
-                    DmsIntent.putExtra("locationId",locationId);
-                    Log.d("locaitonId","locaitonId: "+locationId);
+                    intent.putExtra("currentProject",currentProject);
+                    intent.putExtra("registerName",registerName);
+                    Log.d("currentProject","currentProject: "+currentProject);
+                    Log.d("registerName","registerName: "+registerName);
+                    Log.d("location","locationID: "+locationId);
+                    Log.d("locationId", "locationId: " + locationId); // jsonData 값을 로그로 출력
                     startActivity(intent);
-                    Log.d(TAG, "locationId: " + locationId); // locationId 값을 로그로 출력
+
                 }
             });
         });

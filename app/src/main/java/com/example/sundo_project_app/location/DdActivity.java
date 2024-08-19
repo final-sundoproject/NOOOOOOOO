@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +40,9 @@ public class DdActivity extends AppCompatActivity {
     private static final String TAG = "DdActivity";
     private static final String SERVER_URL = "http://10.0.2.2:8000/location"; // 변경할 서버 URL
 
+    private Serializable currentProject;
+    private String registerName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +55,19 @@ public class DdActivity extends AppCompatActivity {
         // X 버튼을 눌렀을 때 창을 닫는 기능 추가
         findViewById(R.id.btn_close).setOnClickListener(v -> finish());
 
+
         // Intent에서 위도, 경도, projectId 가져오기
         Intent intent = getIntent();
         double latitude = intent.getDoubleExtra("latitude", 0);
         double longitude = intent.getDoubleExtra("longitude", 0);
         projectId = intent.getStringExtra("project_id"); // Intent에서 projectId를 가져옴
+
+        currentProject =  intent.getSerializableExtra("currentProject");
+        registerName = intent.getStringExtra("registerName");
+
+        Log.d("currentProject: {}", String.valueOf(currentProject));
+        Log.d("registerName: {}", registerName);
+
 
         etlatitude.setText(String.valueOf(latitude));
         etlongitude.setText(String.valueOf(longitude));
@@ -168,14 +180,22 @@ public class DdActivity extends AppCompatActivity {
                 Toast.makeText(DdActivity.this, finalResult, Toast.LENGTH_LONG).show();
                 if (locationId != null) {
                     Intent intent = new Intent(DdActivity.this, GeneratorActivity.class);
+
                     Intent DdIntent = new Intent(DdActivity.this, EvaluationActivity.class);
                     intent.putExtra("locationId", locationId);
                     DdIntent.putExtra("locationId",locationId);
                     Log.d("locaitonId","locaitonId: "+locationId);
+
+                    intent.putExtra("locationId", locationId); // locationId를 전달
+                    intent.putExtra("currentProject",currentProject);
+                    intent.putExtra("registerName",registerName);
+                    Log.d("locationId","locationId: "+locationId);
+
                     startActivity(intent);
-                    Log.d(TAG, "locationId: " + locationId);
+
                 }
             });
         });
     }
 }
+
