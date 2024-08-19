@@ -1,17 +1,21 @@
 package com.example.sundo_project_app.location;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputFilter;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -19,6 +23,7 @@ import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.evaluation.EvaluationActivity;
 import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
 import com.example.sundo_project_app.project.model.Project;
+import com.example.sundo_project_app.utill.KoreanInputFilter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.naver.maps.geometry.LatLng;
@@ -46,10 +51,17 @@ public class MapActivity extends AppCompatActivity {
     private Button btnShowDialog;
     private Button btnShowList;
 
+    private String registerName;
+    private String projectId;
+
+    private String locationId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+
+        showEvaluatorNameDialog();
 
         Intent projectIntent = getIntent();
         Bundle extras = projectIntent.getExtras();
@@ -60,6 +72,12 @@ public class MapActivity extends AppCompatActivity {
         }
 
         Project currentProject = (Project) extras.getSerializable("project");
+
+        Log.d("projectId", "projectId: " + currentProject.getProjectId().toString());
+        if (currentProject != null) {
+            projectId = currentProject.getProjectId().toString();
+        }
+
 
         TextView projectNameTextView = findViewById(R.id.textBox3);
         if (currentProject != null) {
@@ -90,15 +108,28 @@ public class MapActivity extends AppCompatActivity {
         });
 
         btnShowList.setOnClickListener(v -> {
-            Log.d("btnShowList", "평가입력 버튼 클릭됨");
-            Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
-            startActivity(intent);
+            if (locationId != null) {
+                Log.d("btnShowList", "평가입력 버튼 클릭됨");
+                Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
+                // 필요한 데이터 전달
+                startActivity(intent);
+            } else {
+                Toast.makeText(MapActivity.this, "좌표 등록이 완료되지 않았습니다. 좌표를 등록해주세요.", Toast.LENGTH_SHORT).show();
+                btnShowList.setEnabled(false);
+            }
         });
 
         // 좌표 입력 버튼 클릭 리스너
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
-            ChoiceCooridate choiceCoordinateDialog = new ChoiceCooridate();
-            choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
+            if (projectId != null) {
+                Log.d("DDprojectId: {}", projectId);
+                Log.d("currentProject: {}", String.valueOf(currentProject));
+                Log.d("registerName: {}", registerName);
+                ChoiceCooridate choiceCoordinateDialog = ChoiceCooridate.newInstance(projectId,currentProject,registerName);
+                choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
+            } else {
+                Toast.makeText(MapActivity.this, "Project ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         // AR 확인 버튼 클릭 리스너
@@ -119,6 +150,40 @@ public class MapActivity extends AppCompatActivity {
         gpsButton = findViewById(R.id.gps);
         gpsButton.setOnClickListener(v -> getCurrentLocation());
     }
+
+
+    // 평가자 이름 입력 대화 상자 표시
+    private void showEvaluatorNameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("평가자 이름 입력");
+
+        final EditText input = new EditText(this);
+        input.setFilters(new InputFilter[]{new KoreanInputFilter()});
+        builder.setView(input);
+
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                registerName = input.getText().toString();
+                if (registerName.isEmpty()) {
+                    Toast.makeText(MapActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    showEvaluatorNameDialog();
+                } else {
+                    Toast.makeText(MapActivity.this, "환영합니다, " + registerName + "님!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
     private void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;

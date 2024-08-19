@@ -1,5 +1,6 @@
 package com.example.sundo_project_app.location;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -9,12 +10,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.evaluation.EvaluationActivity;
+import com.example.sundo_project_app.project.model.Project;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -29,6 +33,7 @@ public class GeneratorActivity extends AppCompatActivity {
     private ExecutorService executorService;
     private String locationId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,9 @@ public class GeneratorActivity extends AppCompatActivity {
         doosanButton = findViewById(R.id.doosan_select_button);
         unisonButton = findViewById(R.id.unison_select_button);
 
+//        // X 버튼을 눌렀을 때 창을 닫는 기능 추가
+//        findViewById(R.id.close_button).setOnClickListener(v -> finish());
+
         // Intent에서 locationId 받기
         locationId = getIntent().getStringExtra("locationId");
         if (locationId != null) {
@@ -46,6 +54,8 @@ public class GeneratorActivity extends AppCompatActivity {
         } else {
             Log.d("GeneratorActivity", "locationId is null, continuing without it.");
         }
+
+
 
         executorService = Executors.newSingleThreadExecutor();
 
@@ -92,6 +102,9 @@ public class GeneratorActivity extends AppCompatActivity {
                     jsonObject.put("locationId", locationId);
                 }
 
+                String registerName = getIntent().getStringExtra("registerName");
+                Serializable currentProject = getIntent().getSerializableExtra("currentProject");
+
                 // URL 설정
                 URL url = new URL("http://10.0.2.2:8000/generator" + (locationId != null ? "/" + locationId : "/"+0));
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -119,7 +132,11 @@ public class GeneratorActivity extends AppCompatActivity {
                     String response = responseBuilder.toString();
                     Log.d("GeneratorActivity", "Response from server: " + response);
 
-                    runOnUiThread(() -> Toast.makeText(GeneratorActivity.this, generatorType + " 발전기가 선택되었습니다. 각도: " + directionAngle, Toast.LENGTH_SHORT).show());
+                    // Success - start EvaluationActivity with bundled data
+                    runOnUiThread(() -> {
+                        Toast.makeText(GeneratorActivity.this, generatorType + " 발전기가 선택되었습니다. 각도: " + directionAngle, Toast.LENGTH_SHORT).show();
+                        startEvaluationActivity(generatorType, directionAngle, locationId, currentProject, registerName);
+                    });
                 } else {
                     runOnUiThread(() -> Toast.makeText(GeneratorActivity.this, "서버 오류 발생. 응답 코드: " + responseCode, Toast.LENGTH_SHORT).show());
                 }
@@ -129,6 +146,23 @@ public class GeneratorActivity extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(GeneratorActivity.this, "전송 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
+    }
+
+    private void startEvaluationActivity(String generatorType, double directionAngle, String locationId, Serializable currentProject, String registerName) {
+        Intent intent = new Intent(GeneratorActivity.this, EvaluationActivity.class);
+        intent.putExtra("generatorType", generatorType);
+        intent.putExtra("directionAngle", directionAngle);
+        intent.putExtra("locationId", locationId);
+        intent.putExtra("currentProject", currentProject);
+        intent.putExtra("registerName", registerName);
+
+        Log.d("GeneratorActivity", "currentProject: " + currentProject);
+
+        Log.d("GeneratorActivity", "generatorType: " + generatorType);
+        Log.d("GeneratorActivity", "directionAngle: " + directionAngle);
+        Log.d("GeneratorActivity", "locationId: " + locationId);
+
+        startActivity(intent);
     }
 
     @Override
