@@ -3,7 +3,9 @@ package com.example.sundo_project_app.login;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,8 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sundo_project_app.MainActivity;
 import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.project.AddbusinessActivity;
+import com.example.sundo_project_app.login.PasswordFindActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView findPasswordLink;
 
 
+
     private Long companyCode;
 
     private static final String LOGIN_URL = "http://10.0.2.2:8000/api/companies/login"; // 서버의 로그인 엔드포인트
@@ -55,6 +60,8 @@ public class LoginActivity extends AppCompatActivity {
         autoLoginCheckbox = findViewById(R.id.autoLoginCheckbox);
         loginButton = findViewById(R.id.loginButton);
         signUpButton = findViewById(R.id.signupButton);
+        findEmailLink = findViewById(R.id.findEmailLink);
+        findPasswordLink = findViewById(R.id.findPasswordLink);
 
         findEmailLink = findViewById(R.id.findEmailLink);
         findPasswordLink = findViewById(R.id.findPasswordLink);
@@ -89,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, PasswordFindActivity.class);
             startActivity(intent);
         });
+
     }
 
     private void login(String email, String password) {
@@ -116,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     String token = extractTokenFromResponse(responseBody);
+
                     companyCode = extractCompanyCodeFromResponse(responseBody); // companyCode 추출
 
                     if (autoLoginCheckbox.isChecked()) {
@@ -201,6 +210,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
                 String responseBody = response.body().string();
                 Log.d("TokenValidation", "Response body: " + responseBody);
 
