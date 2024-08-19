@@ -55,19 +55,17 @@ public class DdActivity extends AppCompatActivity {
         // X 버튼을 눌렀을 때 창을 닫는 기능 추가
         findViewById(R.id.btn_close).setOnClickListener(v -> finish());
 
-
         // Intent에서 위도, 경도, projectId 가져오기
         Intent intent = getIntent();
         double latitude = intent.getDoubleExtra("latitude", 0);
         double longitude = intent.getDoubleExtra("longitude", 0);
         projectId = intent.getStringExtra("project_id"); // Intent에서 projectId를 가져옴
 
-        currentProject =  intent.getSerializableExtra("currentProject");
+        currentProject = intent.getSerializableExtra("currentProject");
         registerName = intent.getStringExtra("registerName");
 
         Log.d("currentProject: {}", String.valueOf(currentProject));
         Log.d("registerName: {}", registerName);
-
 
         etlatitude.setText(String.valueOf(latitude));
         etlongitude.setText(String.valueOf(longitude));
@@ -95,6 +93,7 @@ public class DdActivity extends AppCompatActivity {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("latitude", latitude);
             jsonObject.put("longitude", longitude);
+            jsonObject.put("registerName",registerName);
 
             // projectId가 존재할 경우에만 포함
             if (projectId != null) {
@@ -183,13 +182,13 @@ public class DdActivity extends AppCompatActivity {
 
                     Intent DdIntent = new Intent(DdActivity.this, EvaluationActivity.class);
                     intent.putExtra("locationId", locationId);
-                    DdIntent.putExtra("locationId",locationId);
-                    Log.d("locaitonId","locaitonId: "+locationId);
+                    DdIntent.putExtra("locationId", locationId);
+                    Log.d("locationId", "locationId: " + locationId);
 
                     intent.putExtra("locationId", locationId); // locationId를 전달
-                    intent.putExtra("currentProject",currentProject);
-                    intent.putExtra("registerName",registerName);
-                    Log.d("locationId","locationId: "+locationId);
+                    intent.putExtra("currentProject", currentProject);
+                    intent.putExtra("registerName", registerName);
+                    Log.d("locationId", "locationId: " + locationId);
 
                     startActivity(intent);
 
@@ -198,4 +197,3 @@ public class DdActivity extends AppCompatActivity {
         });
     }
 }
-
