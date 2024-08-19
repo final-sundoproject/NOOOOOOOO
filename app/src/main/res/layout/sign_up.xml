@@ -7,6 +7,104 @@
     android:background="#D4F1D4"
     tools:context=".login.SignUpActivity">
 
+    <!-- 상단에 제목을 추가 -->
+    <TextView
+        android:id="@+id/signUpTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원가입"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="36dp" />
+
+    <!-- 이메일 입력창 -->
+
+    <EditText
+        android:id="@+id/emailInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="#66FFFFFF"
+        android:elevation="4dp"
+        android:hint="이메일"
+        android:padding="12dp"
+        android:textColorHint="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@id/passwordInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.621"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signUpTitle"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <EditText
+        android:id="@+id/passwordInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="#66FFFFFF"
+        android:elevation="4dp"
+        android:hint="비밀번호"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:textColorHint="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailInput"
+        app:layout_constraintBottom_toTopOf="@id/nameInput"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="#66FFFFFF"
+        android:elevation="4dp"
+        android:hint="회사명"
+        android:padding="12dp"
+        android:textColorHint="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordInput"
+        app:layout_constraintBottom_toTopOf="@id/addressInput"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <EditText
+        android:id="@+id/addressInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="#66FFFFFF"
+        android:elevation="4dp"
+        android:hint="회사 주소"
+        android:padding="12dp"
+        android:textColorHint="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameInput"
+        app:layout_constraintBottom_toTopOf="@id/businessNumberInput"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <EditText
+        android:id="@+id/businessNumberInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="#66FFFFFF"
+        android:elevation="4dp"
+        android:hint="사업자 등록 번호"
+        android:padding="12dp"
+        android:textColorHint="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addressInput"
+        app:layout_constraintWidth_percent="0.8" />
+
     <Button
         android:id="@+id/signUpButton"
         android:layout_width="0dp"
@@ -19,87 +117,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/businessNumberInput"
-        app:layout_constraintWidth_percent="0.8" />
-
-    <EditText
-        android:id="@+id/emailInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginTop="104dp"
-        android:background="#66FFFFFF"
-        android:elevation="4dp"
-        android:hint="이메일"
-        android:padding="12dp"
-        android:textColorHint="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.8" />
-
-    <EditText
-        android:id="@+id/businessNumberInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginTop="12dp"
-        android:background="#66FFFFFF"
-        android:elevation="4dp"
-        android:hint="사업자 등록 번호"
-        android:padding="12dp"
-        android:textColorHint="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addressInput"
-        app:layout_constraintWidth_percent="0.8" />
-
-    <EditText
-        android:id="@+id/addressInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginTop="12dp"
-        android:background="#66FFFFFF"
-        android:elevation="4dp"
-        android:hint="회사 주소"
-        android:padding="12dp"
-        android:textColorHint="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameInput"
-        app:layout_constraintWidth_percent="0.8" />
-
-    <EditText
-        android:id="@+id/nameInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginTop="4dp"
-        android:background="#66FFFFFF"
-        android:elevation="4dp"
-        android:hint="회사명"
-        android:padding="12dp"
-        android:textColorHint="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordInput"
-        app:layout_constraintWidth_percent="0.8" />
-
-    <EditText
-        android:id="@+id/passwordInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#66FFFFFF"
-        android:elevation="4dp"
-        android:hint="비밀번호"
-        android:inputType="textPassword"
-        android:padding="12dp"
-        android:textColorHint="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailInput"
         app:layout_constraintWidth_percent="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

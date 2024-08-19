@@ -53,9 +53,10 @@
         android:padding="16dp">
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/doosan_wind_generator" />
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+
+            android:src="@drawable/wind_power" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -112,7 +113,7 @@
             android:id="@+id/doosan_select_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/generator_button_background"
+            android:backgroundTint="#ffffff"
             android:text="선택"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
@@ -129,9 +130,9 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/unison_wind_generator" />
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:src="@drawable/wind_power" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -189,7 +190,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="선택"
-            android:background="@drawable/generator_button_background"
+            android:backgroundTint="#ffffff"
             android:textStyle="bold"
             android:textColor="@android:color/black" />
     </LinearLayout>
