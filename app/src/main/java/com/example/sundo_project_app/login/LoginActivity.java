@@ -47,8 +47,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private Long companyCode;
 
-    private static final String LOGIN_URL = "http://10.0.2.2:8000/api/companies/login"; // 서버의 로그인 엔드포인트
-    private static final String VALIDATE_TOKEN_URL = "http://10.0.2.2:8000/api/validate-token"; // 서버의 토큰 검증 엔드포인트
+    private static final String LOGIN_URL = "http://172.30.1.93:8000/api/companies/login"; // 서버의 로그인 엔드포인트
+    private static final String VALIDATE_TOKEN_URL = "http://172.30.1.93:8000/api/validate-token"; // 서버의 토큰 검증 엔드포인트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.d("e: {}", String.valueOf(e));
                 runOnUiThread(() -> Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show());
             }
 

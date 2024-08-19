@@ -31,6 +31,8 @@
 
         <activity android:name=".login.PasswordFindActivity" />
         <activity android:name=".login.PasswordResetActivity" />
+        <activity android:name=".regulatedArea.RegulatedArea" />
+
 
         <activity
             android:name=".compass.CompassActivity"
@@ -129,6 +131,8 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

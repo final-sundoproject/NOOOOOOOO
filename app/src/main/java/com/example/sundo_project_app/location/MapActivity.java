@@ -2,7 +2,6 @@ package com.example.sundo_project_app.location;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,8 +24,12 @@ import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.evaluation.EvaluationActivity;
 import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
 import com.example.sundo_project_app.project.model.Project;
+import com.example.sundo_project_app.regulatedArea.RegulatedArea;
 import com.example.sundo_project_app.utill.KoreanInputFilter;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
@@ -46,16 +49,21 @@ public class MapActivity extends AppCompatActivity {
     private Button gpsButton; // GPS 버튼
     private List<Marker> markers; // 사용자가 추가한 마커 리스트
     private List<Marker> gpsMarkers; // GPS로 추가한 마커 리스트
+    private boolean isFollowingLocation = false; // 사용자에 의해 화면이 위치를 따라갈지 결정
 
     private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
     private Handler handler; // Handler를 사용하여 주기적으로 작업 수행
+    private Runnable locationUpdateRunnable; // 위치 업데이트를 주기적으로 수행하는 Runnable
+    private static final long LOCATION_UPDATE_INTERVAL = 10000; // 10초 간격
+    private static final long LOCATION_UPDATE_FASTEST_INTERVAL = 5000; // 5초 간격
     private Button btnShowDialog;
     private Button btnShowList;
+    private Button btnRedulated;
     private String projectId;
 
+    private Project currentProject;
     private String registerName;
-
-    private String locationId;
 
 
     @Override
@@ -64,7 +72,81 @@ public class MapActivity extends AppCompatActivity {
         setContentView(R.layout.map);
 
         showEvaluatorNameDialog();
+        initializeViews();
+        initializeLocationServices();
+        retrieveProjectData();
+        setupButtonListeners();
+        setupMapFragment();
+    }
 
+    private void initializeViews() {
+        coordinateSelectButton = findViewById(R.id.coordinateSelect);
+        resetButton = findViewById(R.id.resetButton);
+        gpsButton = findViewById(R.id.gps);
+        btnShowDialog = findViewById(R.id.btnShowDialog);
+        btnShowList = findViewById(R.id.enteredPoint);
+        btnRedulated = findViewById(R.id.redulated);
+        markers = new ArrayList<>();
+        gpsMarkers = new ArrayList<>();
+
+    }
+
+    private void initializeLocationServices() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        handler = new Handler();
+
+        // LocationCallback 정의
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                for (Location location : locationResult.getLocations()) {
+                    // 위치 업데이트를 지도에 반영
+                    updateCurrentLocationOnMap(location);
+                }
+            }
+        };
+
+        // 위치 업데이트 Runnable 정의
+        locationUpdateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (isFollowingLocation) {
+                    getCurrentLocation();
+                }
+                handler.postDelayed(this, LOCATION_UPDATE_INTERVAL); // 주기적으로 실행
+            }
+        };
+
+        startLocationUpdates(); // 위치 업데이트 시작
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startLocationUpdates() {
+        if (!hasLocationPermissions()) {
+            requestLocationPermissions();
+            return;
+        }
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(LOCATION_UPDATE_INTERVAL); // 10초마다 위치 요청
+        locationRequest.setFastestInterval(LOCATION_UPDATE_FASTEST_INTERVAL); // 가장 빠른 위치 요청 주기
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, handler.getLooper());
+
+        // 위치 업데이트 Runnable 시작
+        handler.post(locationUpdateRunnable);
+    }
+
+    private void stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+
+        // 위치 업데이트 Runnable 중지
+        handler.removeCallbacks(locationUpdateRunnable);
+    }
+
+    private void retrieveProjectData() {
         Intent projectIntent = getIntent();
         Bundle extras = projectIntent.getExtras();
 
@@ -73,40 +155,20 @@ public class MapActivity extends AppCompatActivity {
             Log.d("IntentExtras", "Key: " + key + ", Value: " + value);
         }
 
-        Project currentProject = (Project) extras.getSerializable("project");
-        Log.d("projectId", "projectId: " + currentProject.getProjectId().toString());
+        currentProject = (Project) extras.getSerializable("project");
         if (currentProject != null) {
             projectId = currentProject.getProjectId().toString();
+            TextView projectNameTextView = findViewById(R.id.textBox3);
+            projectNameTextView.setText(currentProject.getProjectName());
         }
+    }
 
-        Log.d("projectId", "projectId: " + currentProject.getProjectId().toString());
-        if (currentProject != null) {
-            projectId = currentProject.getProjectId().toString();
-        }
-
-
-        TextView projectNameTextView = findViewById(R.id.textBox3);
-        if (currentProject != null) {
-            String currentProjectName = currentProject.getProjectName();
-            projectNameTextView.setText(currentProjectName);
-        }
-
-        // 마커 리스트 초기화
-        markers = new ArrayList<>();
-        gpsMarkers = new ArrayList<>();
-
-        // 위치 서비스 클라이언트 초기화
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        handler = new Handler(); // Handler 초기화
-
-        // MapFragment 설정
-        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this::onMapReady);
-        }
-
-        btnShowDialog = findViewById(R.id.btnShowDialog);
-        btnShowList = findViewById(R.id.enteredPoint);
+    private void setupButtonListeners() {
+        btnRedulated.setOnClickListener(v ->{
+            Log.d("EvaluationFindAllActivity", "규제지역 버튼 클릭됨");
+            Intent intent = new Intent(MapActivity.this, RegulatedArea.class);
+            startActivity(intent);
+        });
 
         btnShowDialog.setOnClickListener(v -> {
             Log.d("EvaluationFindAllActivity", "평가리스트 버튼 클릭됨");
@@ -114,117 +176,62 @@ public class MapActivity extends AppCompatActivity {
         });
 
         btnShowList.setOnClickListener(v -> {
-            if (locationId != null) {
-                Log.d("btnShowList", "평가입력 버튼 클릭됨");
-                Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
-                // 필요한 데이터 전달
-                startActivity(intent);
-            } else {
-                Toast.makeText(MapActivity.this, "좌표 등록이 완료되지 않았습니다. 좌표를 등록해주세요.", Toast.LENGTH_SHORT).show();
-                btnShowList.setEnabled(false);
-            }
+            Log.d("btnShowList", "평가입력 버튼 클릭됨");
+            Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
+            startActivity(intent);
         });
 
-        // 좌표 입력 버튼 클릭 리스너
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
             if (projectId != null) {
-
-                Log.d("DDprojectId: {}", projectId);
-                Log.d("currentProject: {}", String.valueOf(currentProject));
-                Log.d("registerName: {}", registerName);
-                ChoiceCooridate choiceCoordinateDialog = ChoiceCooridate.newInstance(projectId,currentProject,registerName);
+                ChoiceCooridate choiceCoordinateDialog = ChoiceCooridate.newInstance(projectId, currentProject, registerName);
                 choiceCoordinateDialog.show(getSupportFragmentManager(), "choiceCoordinateDialog");
             } else {
                 Toast.makeText(MapActivity.this, "Project ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // AR 확인 버튼 클릭 리스너
         findViewById(R.id.arCheck).setOnClickListener(v -> {
             Intent intent = new Intent(MapActivity.this, GeneratorActivity.class);
             startActivity(intent);
         });
 
-        // 좌표 선택 버튼 초기화
-        coordinateSelectButton = findViewById(R.id.coordinateSelect);
         coordinateSelectButton.setOnClickListener(v -> toggleMarkerMode());
-
-        // 초기화 버튼 초기화
-        resetButton = findViewById(R.id.resetButton);
-        resetButton.setOnClickListener(v -> resetToInitialState()); // 초기 상태로 리셋하는 메서드 호출
-
-        // GPS 버튼 클릭 리스너
-        gpsButton = findViewById(R.id.gps);
+        resetButton.setOnClickListener(v -> resetToInitialState());
         gpsButton.setOnClickListener(v -> getCurrentLocation());
     }
 
-
-    // 평가자 이름 입력 대화 상자 표시
-    private void showEvaluatorNameDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("평가자 이름 입력");
-
-        final EditText input = new EditText(this);
-        input.setFilters(new InputFilter[]{new KoreanInputFilter()});
-        builder.setView(input);
-
-        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                registerName = input.getText().toString();
-                if (registerName.isEmpty()) {
-                    Toast.makeText(MapActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    showEvaluatorNameDialog();
-                } else {
-                    Toast.makeText(MapActivity.this, "환영합니다, " + registerName + "님!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    private void setupMapFragment() {
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this::onMapReady);
+        }
     }
-
 
     private void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-        // 지도 클릭 이벤트 리스너 설정
         naverMap.setOnMapClickListener((point, latLng) -> {
             if (isMarkerEnabled) {
-                // 클릭한 위치에 마커 추가
-                Marker marker = new Marker();
-                marker.setPosition(latLng);
-                marker.setMap(naverMap);
-
-                // 마커 리스트에 추가
-                markers.add(marker);
-
-                // 마커 클릭 이벤트 리스너 설정
-                marker.setOnClickListener(overlay -> {
-                    // 마커가 클릭되었을 때 위도와 경도 가져오기
-                    double markerLatitude = latLng.latitude;
-                    double markerLongitude = latLng.longitude;
-
-                    // DdActivity로 좌표 전달
-                    Intent intent = new Intent(MapActivity.this, DdActivity.class);
-                    intent.putExtra("latitude", markerLatitude);
-                    intent.putExtra("longitude", markerLongitude);
-                    startActivity(intent);
-
-                    return true; // 클릭 이벤트 처리 완료
-                });
-
-                // 마커가 추가된 위치에 토스트 메시지 표시
-                Toast.makeText(MapActivity.this, "Clicked Location: " + latLng.latitude + ", " + latLng.longitude, Toast.LENGTH_SHORT).show();
+                addMarkerAtLocation(latLng);
             }
         });
+    }
+
+    private void addMarkerAtLocation(LatLng latLng) {
+        Marker marker = new Marker();
+        marker.setPosition(latLng);
+        marker.setMap(naverMap);
+        markers.add(marker);
+
+        marker.setOnClickListener(overlay -> {
+            Intent intent = new Intent(MapActivity.this, DdActivity.class);
+            intent.putExtra("latitude", latLng.latitude);
+            intent.putExtra("longitude", latLng.longitude);
+            startActivity(intent);
+            return true;
+        });
+
+        Toast.makeText(MapActivity.this, "Clicked Location: " + latLng.latitude + ", " + latLng.longitude, Toast.LENGTH_SHORT).show();
     }
 
     private void showEvaluationDialog() {
@@ -233,17 +240,11 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void toggleMarkerMode() {
-        isMarkerEnabled = !isMarkerEnabled; // 상태 토글
-        if (isMarkerEnabled) {
-            coordinateSelectButton.setText("선택해제"); // 버튼 텍스트 변경
-            Toast.makeText(this, "마커 추가 모드 활성화", Toast.LENGTH_SHORT).show();
-        } else {
-            coordinateSelectButton.setText("좌표선택"); // 원래 텍스트로 변경
-            Toast.makeText(this, "마커 추가 모드 비활성화", Toast.LENGTH_SHORT).show();
-        }
+        isMarkerEnabled = !isMarkerEnabled;
+        coordinateSelectButton.setText(isMarkerEnabled ? "선택해제" : "좌표선택");
+        Toast.makeText(this, isMarkerEnabled ? "마커 추가 모드 활성화" : "마커 추가 모드 비활성화", Toast.LENGTH_SHORT).show();
     }
 
-    // 현재 위치 가져오기
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
         if (!hasLocationPermissions()) {
@@ -280,80 +281,72 @@ public class MapActivity extends AppCompatActivity {
         currentLocationMarker.setPosition(new LatLng(latitude, longitude));
         currentLocationMarker.setMap(naverMap);
 
-        // GPS 마커 리스트에 추가
         gpsMarkers.add(currentLocationMarker);
 
-        naverMap.setCameraPosition(new CameraPosition(new LatLng(latitude, longitude), 15));
+        if (isFollowingLocation) {
+            naverMap.setCameraPosition(new CameraPosition(new LatLng(latitude, longitude), 15));
+        }
+
         Toast.makeText(MapActivity.this, "현재 위치: " + latitude + ", " + longitude, Toast.LENGTH_SHORT).show();
     }
 
-    // 초기 상태로 리셋
     private void resetToInitialState() {
-        clearMarkers(); // 모든 마커 제거
-        clearGpsMarkers(); // GPS로 추가한 마커 제거
-        isMarkerEnabled = false; // 마커 추가 모드 비활성화
-        coordinateSelectButton.setText("좌표선택"); // 좌표 선택 버튼 텍스트 초기화
-        Toast.makeText(this, "초기 화면으로 되돌아갔습니다.", Toast.LENGTH_SHORT).show();
-    }
-
-    // 모든 사용자가 추가한 마커 제거
-    private void clearMarkers() {
         for (Marker marker : markers) {
-            marker.setMap(null); // 마커를 지도에서 제거
+            marker.setMap(null);
         }
-        markers.clear(); // 리스트 초기화
-        Toast.makeText(this, "모든 사용자 마커가 제거되었습니다.", Toast.LENGTH_SHORT).show();
-    }
+        markers.clear();
 
-    // 모든 GPS로 추가한 마커 제거
-    private void clearGpsMarkers() {
         for (Marker marker : gpsMarkers) {
-            marker.setMap(null); // 마커를 지도에서 제거
+            marker.setMap(null);
         }
-        gpsMarkers.clear(); // 리스트 초기화
-        Toast.makeText(this, "모든 GPS 마커가 제거되었습니다.", Toast.LENGTH_SHORT).show();
-    }
+        gpsMarkers.clear();
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // 위치 업데이트 중지
-        handler.removeCallbacksAndMessages(null);
+        Toast.makeText(this, "초기화되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // 위치 업데이트 재개
-        // startLocationUpdates(); // GPS 버튼 클릭 시 위치 업데이트
+        startLocationUpdates(); // 액티비티 재개 시 위치 업데이트 재시작
     }
 
-    private void addMarkerAtLocation(LatLng latLng) {
-        Marker marker = new Marker();
-        marker.setPosition(latLng);
-        marker.setMap(naverMap);
-        markers.add(marker);
-
-        marker.setOnClickListener(overlay -> {
-            Intent intent = new Intent(MapActivity.this, DdActivity.class);
-            intent.putExtra("latitude", latLng.latitude);
-            intent.putExtra("longitude", latLng.longitude);
-            startActivity(intent);
-            return true;
-        });
-    }
-
-    // 권한 요청 결과 처리
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 승인되면 현재 위치 가져오기
-                getCurrentLocation();
-            } else {
-                Toast.makeText(this, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
-            }
-        }
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates(); // 액티비티 일시정지 시 위치 업데이트 중지
     }
+
+    // 평가자 이름 입력 대화 상자 표시
+    private void showEvaluatorNameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("평가자 이름 입력");
+
+        final EditText input = new EditText(this);
+        input.setFilters(new InputFilter[]{new KoreanInputFilter()});
+        builder.setView(input);
+
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                registerName = input.getText().toString();
+                if (registerName.isEmpty()) {
+                    Toast.makeText(MapActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    showEvaluatorNameDialog();
+                } else {
+                    Toast.makeText(MapActivity.this, "환영합니다, " + registerName + "님!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
 }
