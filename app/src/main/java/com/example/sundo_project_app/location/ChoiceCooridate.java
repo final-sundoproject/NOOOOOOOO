@@ -21,7 +21,7 @@ public class ChoiceCooridate extends DialogFragment {
 
     private static final String ARG_PROJECT_ID = "project_id";
 
-    // 새로운 인스턴스를 생성하는 메서드
+
     public static ChoiceCooridate newInstance(String projectId, Project currentProject, String registerName) {
         ChoiceCooridate fragment = new ChoiceCooridate();
         Bundle args = new Bundle();
@@ -41,8 +41,10 @@ public class ChoiceCooridate extends DialogFragment {
         Bundle args = getArguments();
         if (args != null) {
             String projectId = args.getString(ARG_PROJECT_ID);
+
             Project currentProject = (Project) getArguments().getSerializable("currentProject");
             String registerName = getArguments().getString("registerName");
+
 
             // 'DD 선택' 버튼 클릭 리스너
             Button btnDdFormat = view.findViewById(R.id.btn_dd_format);
@@ -63,6 +65,7 @@ public class ChoiceCooridate extends DialogFragment {
                 dismiss(); // 모달을 닫고
                 Intent intent = new Intent(getActivity(), DmsActivity.class);
                 intent.putExtra("project_id", projectId); // projectId 추가
+
                 intent.putExtra("currentProject", currentProject); // projectId 추가
                 intent.putExtra("registerName", registerName); // projectId 추가
                 Log.d("projectId",projectId);
@@ -71,7 +74,8 @@ public class ChoiceCooridate extends DialogFragment {
         }
 
         // 'x' 버튼 클릭 리스너 추가
-//        view.findViewById(R.id.btn_close).setOnClickListener(v -> dismiss());
+        view.findViewById(R.id.btn_close).setOnClickListener(v -> dismiss());
+
 
         return view;
     }

@@ -1,5 +1,7 @@
 package com.example.sundo_project_app.location;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.evaluation.EvaluationActivity;
+
 import com.example.sundo_project_app.project.model.Project;
 
 import org.json.JSONObject;
@@ -44,8 +47,10 @@ public class GeneratorActivity extends AppCompatActivity {
         doosanButton = findViewById(R.id.doosan_select_button);
         unisonButton = findViewById(R.id.unison_select_button);
 
-//        // X 버튼을 눌렀을 때 창을 닫는 기능 추가
-//        findViewById(R.id.close_button).setOnClickListener(v -> finish());
+
+        // X 버튼을 눌렀을 때 창을 닫는 기능 추가
+        findViewById(R.id.close_button).setOnClickListener(v -> finish());
+
 
         // Intent에서 locationId 받기
         locationId = getIntent().getStringExtra("locationId");
@@ -135,6 +140,7 @@ public class GeneratorActivity extends AppCompatActivity {
                     // Success - start EvaluationActivity with bundled data
                     runOnUiThread(() -> {
                         Toast.makeText(GeneratorActivity.this, generatorType + " 발전기가 선택되었습니다. 각도: " + directionAngle, Toast.LENGTH_SHORT).show();
+
                         startEvaluationActivity(generatorType, directionAngle, locationId, currentProject, registerName);
                     });
                 } else {
@@ -148,15 +154,18 @@ public class GeneratorActivity extends AppCompatActivity {
         });
     }
 
+
     private void startEvaluationActivity(String generatorType, double directionAngle, String locationId, Serializable currentProject, String registerName) {
         Intent intent = new Intent(GeneratorActivity.this, EvaluationActivity.class);
         intent.putExtra("generatorType", generatorType);
         intent.putExtra("directionAngle", directionAngle);
         intent.putExtra("locationId", locationId);
+
         intent.putExtra("currentProject", currentProject);
         intent.putExtra("registerName", registerName);
 
         Log.d("GeneratorActivity", "currentProject: " + currentProject);
+
 
         Log.d("GeneratorActivity", "generatorType: " + generatorType);
         Log.d("GeneratorActivity", "directionAngle: " + directionAngle);

@@ -30,10 +30,10 @@ public class DmsActivity extends AppCompatActivity {
     private EditText etLatitudeDegrees, etLatitudeMinutes, etLatitudeSeconds, etLatitudeDirection;
     private EditText etLongitudeDegrees, etLongitudeMinutes, etLongitudeSeconds, etLongitudeDirection;
     private Button btnSubmit;
-    private String projectId="1"; // projectId를 멤버 변수로 선언
+    private String projectId; // projectId를 멤버 변수로 선언
 
-    // 변경할 서버 URL
-    private static final String SERVER_URL = "http://10.0.2.2:8000/location";
+    private static final String TAG = "DmsActivity";
+    private static final String SERVER_URL = "http://10.0.2.2:8000/location"; // 변경할 서버 URL
 
     // locationId 변수를 멤버 변수로 선언
     private String locationId;
@@ -59,11 +59,21 @@ public class DmsActivity extends AppCompatActivity {
 
         btnSubmit = findViewById(R.id.btn_submit);
 
+        // X 버튼을 눌렀을 때 창을 닫는 기능 추가
+        findViewById(R.id.btn_close).setOnClickListener(v -> finish());
+
+        Intent intent = getIntent();
+        projectId = intent.getStringExtra("project_id"); // Intent에서 projectId를 가져옴
+
+        // 로그를 통해 projectId 확인
+        Log.d(TAG, "Received projectId: " + projectId);
+
         // Intent에서 projectId 가져오기
         Intent intent = getIntent();
         //projectId = intent.getStringExtra("projectId"); // projectId 가져오기
         currentProject =  intent.getSerializableExtra("currentProject");
         registerName = intent.getStringExtra("registerName");
+
 
         // 버튼 클릭 리스너 설정
         btnSubmit.setOnClickListener(v -> handleSubmit());
@@ -103,8 +113,10 @@ public class DmsActivity extends AppCompatActivity {
             jsonObject.put("longitudeDirection", longitudeDirection);
 
             // projectId가 존재할 경우에만 포함
-            if (projectId != null) {
+            if (projectId != null && !projectId.isEmpty()) {
                 jsonObject.put("projectId", projectId);
+            } else {
+                Log.e(TAG, "projectId is null or empty");
             }
 
             // 서버로 데이터 전송
@@ -116,6 +128,7 @@ public class DmsActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this, "오류가 발생했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -123,13 +136,18 @@ public class DmsActivity extends AppCompatActivity {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
-        Log.d("DmsActivity", "jsonData: " + jsonData); // jsonData 값을 로그로 출력
+        Log.d(TAG, "jsonData: " + jsonData); // jsonData 값을 로그로 출력
 
         executor.execute(() -> {
             String result = null;
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
             try {
-                URL url = new URL(SERVER_URL + "/" + projectId);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                // URL에 projectId를 포함시키기
+                URL url = new URL(SERVER_URL + (projectId != null && !projectId.isEmpty() ? "/" + projectId : ""));
+                Log.d(TAG, "Request URL: " + url.toString()); // 요청 URL 로그로 출력
+
+                connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; utf-8");
                 connection.setDoOutput(true);
@@ -141,9 +159,9 @@ public class DmsActivity extends AppCompatActivity {
                 }
 
                 int responseCode = connection.getResponseCode();
+                Log.d(TAG, "Response Code: " + responseCode); // 응답 코드 로그로 출력
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    // 서버에서 locationId를 응답으로 받기
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     StringBuilder responseBuilder = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {
@@ -158,6 +176,17 @@ public class DmsActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 result = "전송 중 오류가 발생했습니다: " + e.getMessage(); // 오류 메시지 포함
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error closing reader: " + e.getMessage());
+                    }
+                }
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
 
             // 메인 스레드에서 UI 업데이트
@@ -175,6 +204,7 @@ public class DmsActivity extends AppCompatActivity {
                     Log.d("location","locationID: "+locationId);
                     Log.d("locationId", "locationId: " + locationId); // jsonData 값을 로그로 출력
                     startActivity(intent);
+
                 }
             });
         });

@@ -114,15 +114,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".evaluation.EvaluationFindAllActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.EVALUATIONFINDALL_ACTION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="nbpr5wd89w" />

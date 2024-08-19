@@ -1,6 +1,8 @@
 package com.example.sundo_project_app.location;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,7 +34,6 @@ import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.overlay.Marker;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,13 +44,14 @@ public class MapActivity extends AppCompatActivity {
     private Button coordinateSelectButton;
     private Button resetButton; // 초기화 버튼
     private Button gpsButton; // GPS 버튼
-    private List<Marker> markers; // 마커 리스트
+    private List<Marker> markers; // 사용자가 추가한 마커 리스트
+    private List<Marker> gpsMarkers; // GPS로 추가한 마커 리스트
 
     private FusedLocationProviderClient fusedLocationClient;
     private Handler handler; // Handler를 사용하여 주기적으로 작업 수행
-    private Runnable locationUpdateRunnable; // 위치 업데이트를 위한 Runnable
     private Button btnShowDialog;
     private Button btnShowList;
+    private String projectId;
 
     private String registerName;
     private String projectId;
@@ -72,6 +74,10 @@ public class MapActivity extends AppCompatActivity {
         }
 
         Project currentProject = (Project) extras.getSerializable("project");
+        Log.d("projectId", "projectId: " + currentProject.getProjectId().toString());
+        if (currentProject != null) {
+            projectId = currentProject.getProjectId().toString();
+        }
 
         Log.d("projectId", "projectId: " + currentProject.getProjectId().toString());
         if (currentProject != null) {
@@ -85,9 +91,9 @@ public class MapActivity extends AppCompatActivity {
             projectNameTextView.setText(currentProjectName);
         }
 
-
         // 마커 리스트 초기화
         markers = new ArrayList<>();
+        gpsMarkers = new ArrayList<>();
 
         // 위치 서비스 클라이언트 초기화
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -122,6 +128,7 @@ public class MapActivity extends AppCompatActivity {
         // 좌표 입력 버튼 클릭 리스너
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
             if (projectId != null) {
+
                 Log.d("DDprojectId: {}", projectId);
                 Log.d("currentProject: {}", String.valueOf(currentProject));
                 Log.d("registerName: {}", registerName);
@@ -237,23 +244,13 @@ public class MapActivity extends AppCompatActivity {
     }
 
     // 현재 위치 가져오기
+    @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
-
         if (!hasLocationPermissions()) {
             requestLocationPermissions();
             return;
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
@@ -282,6 +279,10 @@ public class MapActivity extends AppCompatActivity {
         Marker currentLocationMarker = new Marker();
         currentLocationMarker.setPosition(new LatLng(latitude, longitude));
         currentLocationMarker.setMap(naverMap);
+
+        // GPS 마커 리스트에 추가
+        gpsMarkers.add(currentLocationMarker);
+
         naverMap.setCameraPosition(new CameraPosition(new LatLng(latitude, longitude), 15));
         Toast.makeText(MapActivity.this, "현재 위치: " + latitude + ", " + longitude, Toast.LENGTH_SHORT).show();
     }
@@ -289,25 +290,35 @@ public class MapActivity extends AppCompatActivity {
     // 초기 상태로 리셋
     private void resetToInitialState() {
         clearMarkers(); // 모든 마커 제거
+        clearGpsMarkers(); // GPS로 추가한 마커 제거
         isMarkerEnabled = false; // 마커 추가 모드 비활성화
         coordinateSelectButton.setText("좌표선택"); // 좌표 선택 버튼 텍스트 초기화
         Toast.makeText(this, "초기 화면으로 되돌아갔습니다.", Toast.LENGTH_SHORT).show();
     }
 
-    // 모든 마커 제거
+    // 모든 사용자가 추가한 마커 제거
     private void clearMarkers() {
         for (Marker marker : markers) {
             marker.setMap(null); // 마커를 지도에서 제거
         }
         markers.clear(); // 리스트 초기화
-        Toast.makeText(this, "모든 마커가 제거되었습니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "모든 사용자 마커가 제거되었습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    // 모든 GPS로 추가한 마커 제거
+    private void clearGpsMarkers() {
+        for (Marker marker : gpsMarkers) {
+            marker.setMap(null); // 마커를 지도에서 제거
+        }
+        gpsMarkers.clear(); // 리스트 초기화
+        Toast.makeText(this, "모든 GPS 마커가 제거되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         // 위치 업데이트 중지
-        handler.removeCallbacks(locationUpdateRunnable);
+        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
