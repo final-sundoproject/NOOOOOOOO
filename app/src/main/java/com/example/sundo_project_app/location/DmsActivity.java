@@ -68,8 +68,7 @@ public class DmsActivity extends AppCompatActivity {
         // 로그를 통해 projectId 확인
         Log.d(TAG, "Received projectId: " + projectId);
 
-        // Intent에서 projectId 가져오기
-        Intent intent = getIntent();
+
         //projectId = intent.getStringExtra("projectId"); // projectId 가져오기
         currentProject =  intent.getSerializableExtra("currentProject");
         registerName = intent.getStringExtra("registerName");

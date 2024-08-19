@@ -54,7 +54,7 @@ public class MapActivity extends AppCompatActivity {
     private String projectId;
 
     private String registerName;
-    private String projectId;
+
 
     private String locationId;
 
