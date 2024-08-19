@@ -7,21 +7,45 @@
     android:padding="16dp"
     android:background="@android:color/white">
 
-    <!-- 제목 텍스트 -->
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- 제목과 "x" 버튼을 같은 선상에 배치 -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="풍력 발전기 모델 선택"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="16dp"
-        android:textColor="@android:color/black" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- 제목 텍스트 -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="풍력 발전기 모델 선택"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="@android:color/black" />
+
+        <!-- "x" 버튼 -->
+        <TextView
+            android:id="@+id/close_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="x"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:clickable="true"
+            android:padding="4dp" />
+    </LinearLayout>
 
     <!-- 첫 번째 풍력 발전기 옵션 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="129dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/generator_background"
         android:gravity="center_vertical"
@@ -32,7 +56,6 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/doosan_wind_generator" />
-
 
         <LinearLayout
             android:layout_width="0dp"

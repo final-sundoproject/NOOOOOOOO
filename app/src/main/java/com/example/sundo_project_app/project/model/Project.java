@@ -1,8 +1,12 @@
 package com.example.sundo_project_app.project.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Project implements Serializable {
+
+    private Map<String, String> additionalAttributes;
 
     // 프로젝트의 고유 ID
     private Long projectId;
@@ -88,5 +92,13 @@ public class Project implements Serializable {
                 ", registrationDate='" + registrationDate + '\'' +
                 ", isChecked=" + isChecked +
                 '}';
+    }
+
+    public void put(String key, String value) {
+        additionalAttributes.put(key, value);
+    }
+
+    public String getAttribute(String key) {
+        return additionalAttributes.get(key);
     }
 }
