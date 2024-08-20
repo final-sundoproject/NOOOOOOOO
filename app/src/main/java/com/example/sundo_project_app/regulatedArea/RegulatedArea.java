@@ -6,12 +6,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.sundo_project_app.R;
 
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
+
+
+import java.util.List;
+
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -20,7 +21,7 @@ public class RegulatedArea extends AppCompatActivity {
     private static final String BASE_URL = "https://apis.data.go.kr/1192000/";
     private static final String SERVICE_KEY = "xyigcn2H+16RENHs6SNbyOXjPjW0t0Tastu/ePEl3PW6jMKcyrxrFErPO4Rzc+GgV2G44DvWYE/HGIeUhEIxCw==";
     private static final int PAGE_NO = 1;
-    private static final int NUM_OF_ROWS = 100;
+    private static final int NUM_OF_ROWS = 1000;
 
     private TextView TextViewResult;
 
@@ -34,36 +35,45 @@ public class RegulatedArea extends AppCompatActivity {
         // Retrofit 초기화
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
         // API 인터페이스 생성
-        regulateApi api = retrofit.create(regulateApi.class);
+        RegulateApi api = retrofit.create(RegulateApi.class);
 
         // API 호출
-        Call<ResponseBody> call = api.getMarineProtectArea(SERVICE_KEY, PAGE_NO, NUM_OF_ROWS);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<RegulateResponse> call = api.getMarineProtectArea(SERVICE_KEY, PAGE_NO, NUM_OF_ROWS);
+        call.enqueue(new Callback<RegulateResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        // 응답 본문을 문자열로 변환
-                        String result = response.body().string();
-                        TextViewResult.setText(result);
-                    } catch (IOException e) {
-                        Log.e("RegulatedArea", "Error parsing response", e);
-                        TextViewResult.setText("Error parsing response");
+            public void onResponse(Call<RegulateResponse> call, Response<RegulateResponse> response) {
+                if (response.isSuccessful()) {
+                    RegulateResponse apiResponse = response.body();
+                    if (apiResponse != null) {
+                        List<RegulateResponse.Body.Item> items = apiResponse.getBody().getItems().getItemList();
+                        if (items.isEmpty()) {
+                            Log.d("RegulatedArea", "No items found in the response");
+                            TextViewResult.setText("No items found in the response");
+                        } else {
+                            StringBuilder addressBuilder = new StringBuilder();
+                            for (RegulateResponse.Body.Item item : items) {
+                                addressBuilder.append(item.getHmpgAddrLcAddr()).append("\n");
+                            }
+                            TextViewResult.setText(addressBuilder.toString());
+                        }
+                    } else {
+                        Log.d("RegulatedArea", "Response body is null");
+                        TextViewResult.setText("Response body is null");
                     }
                 } else {
-                    Log.e("RegulatedArea", "Request failed with code: " + response.code());
-                    TextViewResult.setText("Request failed");
+                    Log.d("RegulatedArea", "API call failed with code: " + response.code());
+                    TextViewResult.setText("API call failed with code: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("RegulatedArea", "Request failed", t);
-                TextViewResult.setText("Request failed: " + t.getMessage());
+            public void onFailure(Call<RegulateResponse> call, Throwable t) {
+                Log.e("RegulatedArea", "API call failed", t);
+                TextViewResult.setText("API call failed: " + t.getMessage());
             }
         });
     }
