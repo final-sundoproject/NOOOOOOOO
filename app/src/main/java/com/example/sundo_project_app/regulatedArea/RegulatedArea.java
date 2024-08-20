@@ -1,5 +1,6 @@
 package com.example.sundo_project_app.regulatedArea;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -9,7 +10,7 @@ import com.example.sundo_project_app.R;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,6 +25,8 @@ public class RegulatedArea extends AppCompatActivity {
     private static final int NUM_OF_ROWS = 1000;
 
     private TextView TextViewResult;
+
+    private List<String> addresses = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +59,27 @@ public class RegulatedArea extends AppCompatActivity {
                         } else {
                             StringBuilder addressBuilder = new StringBuilder();
                             for (RegulateResponse.Body.Item item : items) {
-                                addressBuilder.append(item.getHmpgAddrLcAddr()).append("\n");
+                                String address = item.gethmpgNm();
+
+                                String[] keywords = {"해양", "습지", "해역", "주변해역"};
+
+                                int cutIndex = address.length();
+                                for (String keyword : keywords) {
+                                    int index = address.indexOf(keyword);
+                                    if (index != -1 && index < cutIndex) {
+                                        cutIndex = index;
+                                    }
+                                }
+
+                                // 잘라낸 주소를 저장
+                                address = address.substring(0, cutIndex).trim();
+                                addresses.add(address);
                             }
-                            TextViewResult.setText(addressBuilder.toString());
+
+                            // GeocodeActivity로 주소 목록 전달
+                            Intent intent = new Intent(RegulatedArea.this, GeocodeActivity.class);
+                            intent.putStringArrayListExtra("addresses", new ArrayList<>(addresses));
+                            startActivity(intent);
                         }
                     } else {
                         Log.d("RegulatedArea", "Response body is null");

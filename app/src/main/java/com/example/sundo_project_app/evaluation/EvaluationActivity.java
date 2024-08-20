@@ -1,21 +1,28 @@
 package com.example.sundo_project_app.evaluation;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.example.sundo_project_app.R;
@@ -23,8 +30,10 @@ import com.example.sundo_project_app.project.model.Project;
 
 import java.io.DataOutputStream;
 import java.io.File;
-
-import java.io.Serializable;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -43,22 +52,28 @@ public class EvaluationActivity extends AppCompatActivity {
     private TextView viewDate;
 
     private String locationId;
-
+    private static final int REQUEST_IMAGE_PICK = 1; // 요청 코드
+    private static final int REQUEST_PERMISSIONS = 2; // 권한 요청 코드
+    private Uri imageUri; // 선택한 이미지 URI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.evaluation);
 
-        Intent intent = getIntent();
+        // 권한 요청
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+        }
 
+        Intent intent = getIntent();
         locationId = intent.getStringExtra("locationId");
         Project currentProject = (Project) intent.getSerializableExtra("currentProject");
         String registerName = intent.getStringExtra("registerName");
 
-        Log.d("locationId: {}", String.valueOf(locationId));
-        Log.d("currentProject: {}", String.valueOf(currentProject));
-        Log.d("registerName: {}", String.valueOf(registerName));
+        Log.d("locationId", String.valueOf(locationId));
+        Log.d("currentProject", String.valueOf(currentProject));
+        Log.d("registerName", String.valueOf(registerName));
 
         seekBar1 = findViewById(R.id.seekBar1);
         seekBar2 = findViewById(R.id.seekBar2);
@@ -70,34 +85,79 @@ public class EvaluationActivity extends AppCompatActivity {
         nestedScrollView = findViewById(R.id.nestedScrollView);
         viewDate = findViewById(R.id.textViewDate);
 
-        TextView textViewName = findViewById(R.id.textViewName);
         if (currentProject != null) {
             textViewName.setText(currentProject.getProjectName());
             viewDate.setText(currentProject.getRegistrationDate());
             textViewObserver.setText(registerName);
         }
 
-        seekBars = new SeekBar[] {
+        seekBars = new SeekBar[]{
                 findViewById(R.id.seekBar1),
                 findViewById(R.id.seekBar2),
                 findViewById(R.id.seekBar3),
                 findViewById(R.id.seekBar4)
         };
 
-        textViews = new TextView[] {
+        textViews = new TextView[]{
                 findViewById(R.id.textViewLabel1),
                 findViewById(R.id.textViewLabel2),
                 findViewById(R.id.textViewLabel3),
                 findViewById(R.id.textViewLabel4)
         };
 
-
         initializeTextViews();
         attachSeekBarListeners();
 
         btnSubmit.setOnClickListener(v -> submitEvaluation());
+
+        ImageView imageViewMain = findViewById(R.id.imageViewMain);
+        imageViewMain.setOnClickListener(v -> openImagePicker());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();
+            if (imageUri != null) {
+                ImageView imageViewMain = findViewById(R.id.imageViewMain);
+                try {
+                    File imageFile = saveUriToFile(imageUri);
+                    Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                    imageViewMain.setImageBitmap(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "이미지 로딩 실패", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_IMAGE_PICK);
+    }
+
+    private File saveUriToFile(Uri uri) throws Exception {
+        File tempFile = File.createTempFile("image", ".jpg", getCacheDir());
+
+        try (InputStream inputStream = getContentResolver().openInputStream(uri);
+             FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+
+            if (inputStream == null) {
+                throw new IOException("InputStream is null");
+            }
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, length);
+            }
+        }
+
+        return tempFile;
+    }
 
     private void initializeTextViews() {
         for (int i = 0; i < textViews.length; i++) {
@@ -115,10 +175,12 @@ public class EvaluationActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {}
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
                 @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {}
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
             });
         }
     }
@@ -148,9 +210,9 @@ public class EvaluationActivity extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            String result = null;
+            String result;
             try {
-                URL url = new URL("http://172.30.1.93:8000/evaluation");
+                URL url = new URL("http://172.30.1.44:8000/evaluation");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
@@ -158,17 +220,22 @@ public class EvaluationActivity extends AppCompatActivity {
 
                 try (DataOutputStream request = new DataOutputStream(connection.getOutputStream())) {
                     // 이미지 파일 저장 후 파일 전송
-                    File imageFile = saveBitmapToFile();
+                    File imageFile;
+                    if (imageUri != null) {
+                        imageFile = saveUriToFile(imageUri);
+                    } else {
+                        imageFile = saveBitmapToFile();
+                    }
                     addFilePart(request, "arImage", imageFile);
 
-                    // EvaluationSaveDto 필드 전송
+                    // 필드 전송
                     addFormField(request, "title", textViewName.getText().toString());
                     addFormField(request, "registrantName", textViewObserver.getText().toString());
                     addFormField(request, "windVolume", String.valueOf(score1));
                     addFormField(request, "noiseLevel", String.valueOf(score2));
                     addFormField(request, "scenery", String.valueOf(score3));
                     addFormField(request, "waterDepth", String.valueOf(score4));
-                    addFormField(request, "locationId", locationId);
+                    addFormField(request, "locationId", locationId); // Convert to long
 
                     request.writeBytes("--" + BOUNDARY + "--" + LINE_FEED);
                     request.flush();
@@ -191,44 +258,52 @@ public class EvaluationActivity extends AppCompatActivity {
         });
     }
 
-    private void addFormField(DataOutputStream request, String fieldName, String fieldValue) throws Exception {
+
+    private void addFormField(DataOutputStream request, String name, String value) throws Exception {
         request.writeBytes("--" + BOUNDARY + LINE_FEED);
-        request.writeBytes("Content-Disposition: form-data; name=\"" + fieldName + "\"" + LINE_FEED);
-        request.writeBytes("Content-Type: application/json; charset=UTF-8" + LINE_FEED); // charset=UTF-8 추가
+        request.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"" + LINE_FEED);
         request.writeBytes(LINE_FEED);
-        request.writeBytes(new String(fieldValue.getBytes("UTF-8"), "ISO-8859-1") + LINE_FEED); // UTF-8로 인코딩
+        request.writeBytes(value + LINE_FEED);
     }
 
     private void addFilePart(DataOutputStream request, String fieldName, File file) throws Exception {
-        String fileNameHeader = "--" + BOUNDARY + LINE_FEED +
-                "Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + file.getName() + "\"" + LINE_FEED +
-                "Content-Type: " + HttpURLConnection.guessContentTypeFromName(file.getName()) + LINE_FEED +
-                "Content-Transfer-Encoding: binary" + LINE_FEED + LINE_FEED;
+        String contentType = getContentType(file.getName());
 
-        Log.d("Upload", "Adding file part: " + fileNameHeader);
-        request.writeBytes(fileNameHeader);
+        request.writeBytes("--" + BOUNDARY + LINE_FEED);
+        request.writeBytes("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + file.getName() + "\"" + LINE_FEED);
+        request.writeBytes("Content-Type: " + contentType + LINE_FEED);
+        request.writeBytes(LINE_FEED);
 
-        try (FileInputStream inputStream = new FileInputStream(file)) {
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
             byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                request.write(buffer, 0, bytesRead);
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                request.write(buffer, 0, length);
             }
         }
 
         request.writeBytes(LINE_FEED);
     }
 
+    private String getContentType(String fileName) {
+        if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (fileName.endsWith(".png")) {
+            return "image/png";
+        } else if (fileName.endsWith(".gif")) {
+            return "image/gif";
+        } else {
+            return "application/octet-stream"; // 기본적으로 지원되지 않는 파일 형식
+        }
+    }
 
     private File saveBitmapToFile() throws Exception {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.your_image);
-
-        File file = new File(getCacheDir(), "image.png");
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+        // 임시 비트맵 파일 생성 (기본 이미지 사용)
+        File tempFile = File.createTempFile("default_image", ".jpg", getCacheDir());
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            Bitmap defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.background2);
+            defaultBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
         }
-
-        return file;
+        return tempFile;
     }
 }
-

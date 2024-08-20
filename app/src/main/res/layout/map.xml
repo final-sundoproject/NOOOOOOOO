@@ -108,7 +108,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gps" />
 
-
     <!-- 오른쪽 하단으로 배치된 평가리스트 버튼 -->
     <Button
         android:id="@+id/btnShowDialog"

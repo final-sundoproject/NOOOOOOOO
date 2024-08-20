@@ -11,6 +11,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
 
     <uses-feature
@@ -32,7 +36,7 @@
         <activity android:name=".login.PasswordFindActivity" />
         <activity android:name=".login.PasswordResetActivity" />
         <activity android:name=".regulatedArea.RegulatedArea" />
-
+        <activity android:name=".evaluation.ArImageActivity" />
 
         <activity
             android:name=".compass.CompassActivity"
@@ -68,6 +72,13 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".regulatedArea.GeocodeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.GeocodeActivity" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".location.MapActivity"
             android:exported="true">

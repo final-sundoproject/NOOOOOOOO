@@ -79,11 +79,15 @@ public class RegulateResponse {
             @Element(name = "hmpgAddrLcAddr")
             private String hmpgAddrLcAddr;
 
+            @Element(name = "hmpgNm")
+            private String hmpgNm;
+
             // Other fields if needed
 
             public String getHmpgAddrLcAddr() {
                 return hmpgAddrLcAddr;
             }
+            public String gethmpgNm() {return hmpgNm;}
         }
     }
 

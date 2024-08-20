@@ -57,7 +57,7 @@ public class EvaluationDialogFragment extends DialogFragment {
 
     private void fetchDataAndUpdateRecyclerView() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.30.1.93:8000/")
+                .baseUrl("http://172.30.1.44:8000/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
