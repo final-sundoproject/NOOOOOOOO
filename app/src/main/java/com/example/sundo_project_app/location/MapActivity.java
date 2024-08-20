@@ -63,13 +63,12 @@ public class MapActivity extends AppCompatActivity {
     private Project currentProject;
     private String registerName;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
 
-        showEvaluatorNameDialog();
+        showEvaluatorNameDialog(); // 평가자 이름 입력 대화 상자 표시
         initializeViews();
         initializeLocationServices();
         retrieveProjectData();
@@ -85,7 +84,6 @@ public class MapActivity extends AppCompatActivity {
         btnShowList = findViewById(R.id.enteredPoint);
         markers = new ArrayList<>();
         gpsMarkers = new ArrayList<>();
-
     }
 
     private void initializeLocationServices() {
@@ -188,7 +186,7 @@ public class MapActivity extends AppCompatActivity {
 
         coordinateSelectButton.setOnClickListener(v -> toggleMarkerMode());
         resetButton.setOnClickListener(v -> resetToInitialState());
-        gpsButton.setOnClickListener(v -> getCurrentLocation());
+        gpsButton.setOnClickListener(v -> startTrackingLocation());
     }
 
     private void setupMapFragment() {
@@ -214,10 +212,14 @@ public class MapActivity extends AppCompatActivity {
         marker.setMap(naverMap);
         markers.add(marker);
 
+        // 마커 클릭 시 DdActivity로 이동
         marker.setOnClickListener(overlay -> {
             Intent intent = new Intent(MapActivity.this, DdActivity.class);
             intent.putExtra("latitude", latLng.latitude);
             intent.putExtra("longitude", latLng.longitude);
+            intent.putExtra("project_id", projectId); // 프로젝트 ID 전달
+            intent.putExtra("currentProject", currentProject); // 현재 프로젝트 전달
+            intent.putExtra("registerName", registerName); // 평가자 이름 전달
             startActivity(intent);
             return true;
         });
@@ -247,6 +249,7 @@ public class MapActivity extends AppCompatActivity {
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
                         updateCurrentLocationOnMap(location);
+                        Toast.makeText(MapActivity.this, "위도 : " + location.getLatitude() +" , "+ "경도 :" + location.getLongitude(),Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(MapActivity.this, "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
                     }
@@ -256,29 +259,41 @@ public class MapActivity extends AppCompatActivity {
                 });
     }
 
-    private boolean hasLocationPermissions() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestLocationPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-    }
-
     private void updateCurrentLocationOnMap(Location location) {
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        Marker currentLocationMarker = new Marker();
-        currentLocationMarker.setPosition(new LatLng(latitude, longitude));
-        currentLocationMarker.setMap(naverMap);
-
-        gpsMarkers.add(currentLocationMarker);
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
         if (isFollowingLocation) {
-            naverMap.setCameraPosition(new CameraPosition(new LatLng(latitude, longitude), 15));
+            naverMap.setCameraPosition(new CameraPosition(latLng, 15));
         }
 
-        Toast.makeText(MapActivity.this, "현재 위치: " + latitude + ", " + longitude, Toast.LENGTH_SHORT).show();
+        // 기존의 GPS 마커가 있으면 삭제
+        if (!gpsMarkers.isEmpty()) {
+            Marker lastGpsMarker = gpsMarkers.get(gpsMarkers.size() - 1);
+            lastGpsMarker.setMap(null); // 지도에서 제거
+            gpsMarkers.remove(lastGpsMarker); // 리스트에서 제거
+        }
+
+        // 새로운 GPS 마커 추가
+        Marker gpsMarker = new Marker();
+        gpsMarker.setPosition(latLng);
+        gpsMarker.setMap(naverMap);
+        gpsMarkers.add(gpsMarker);
+    }
+
+
+    private void startTrackingLocation() {
+        if (!isFollowingLocation) {
+            isFollowingLocation = true;
+            gpsButton.setText("중지");
+            getCurrentLocation();
+            Toast.makeText(MapActivity.this, "위치 추적 시작" , Toast.LENGTH_SHORT).show();
+
+        } else {
+            isFollowingLocation = false;
+            gpsButton.setText("GPS");
+            stopLocationUpdates();
+            Toast.makeText(this, "위치 추적 중지", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void resetToInitialState() {
@@ -287,57 +302,55 @@ public class MapActivity extends AppCompatActivity {
         }
         markers.clear();
 
-        for (Marker marker : gpsMarkers) {
-            marker.setMap(null);
+        for (Marker gpsMarker : gpsMarkers) {
+            gpsMarker.setMap(null);
         }
         gpsMarkers.clear();
 
-        Toast.makeText(this, "초기화되었습니다.", Toast.LENGTH_SHORT).show();
+        isMarkerEnabled = false;
+        coordinateSelectButton.setText("좌표선택");
+        gpsButton.setText("GPS");
+        stopLocationUpdates();
+        isFollowingLocation = false;
+    }
+
+    private void requestLocationPermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                1000);
+    }
+
+    private boolean hasLocationPermissions() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        startLocationUpdates(); // 액티비티 재개 시 위치 업데이트 재시작
+    protected void onDestroy() {
+        super.onDestroy();
+        stopLocationUpdates();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopLocationUpdates(); // 액티비티 일시정지 시 위치 업데이트 중지
-    }
-
-    // 평가자 이름 입력 대화 상자 표시
     private void showEvaluatorNameDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("평가자 이름 입력");
+        builder.setTitle("이름 입력");
 
         final EditText input = new EditText(this);
-        input.setFilters(new InputFilter[]{new KoreanInputFilter()});
+        input.setFilters(new InputFilter[]{new KoreanInputFilter()}); // 한글 입력만 가능하도록 설정
         builder.setView(input);
 
-        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                registerName = input.getText().toString();
-                if (registerName.isEmpty()) {
-                    Toast.makeText(MapActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    showEvaluatorNameDialog();
-                } else {
-                    Toast.makeText(MapActivity.this, "환영합니다, " + registerName + "님!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        builder.setPositiveButton("확인", (dialog, which) -> {
+            registerName = input.getText().toString();
+            if (registerName.isEmpty()) {
+                Toast.makeText(MapActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                showEvaluatorNameDialog(); // 이름을 입력하지 않았을 경우 다시 다이얼로그 표시
+            } else {
+                Toast.makeText(MapActivity.this, "입력된 이름: " + registerName, Toast.LENGTH_SHORT).show();
             }
         });
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setNegativeButton("취소", (dialog, which) -> dialog.cancel());
+
+        builder.show();
     }
-
-
 }
