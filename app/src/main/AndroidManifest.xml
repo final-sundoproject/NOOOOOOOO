@@ -84,12 +84,8 @@
 
         <activity
             android:name=".location.DmsActivity"
-            android:theme="@style/CustomDmsTheme"
+            android:theme="@style/Theme.App.Modal"
             android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.DMS_ACTION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
 
         <activity
@@ -107,17 +103,16 @@
 
 
         <activity
-
             android:name=".location.DdActivity"
-            android:theme="@style/CustomDmsTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.App.Modal">
             <!-- intent-filter 제거 -->
         </activity>
 
         <activity
             android:name=".location.GeneratorActivity"
-            android:theme="@style/CustomGeneratorTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.App.Modal">
             <!-- intent-filter 제거 -->
         </activity>
 

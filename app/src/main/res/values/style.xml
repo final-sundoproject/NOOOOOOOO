@@ -18,4 +18,14 @@
         <item name="android:backgroundDimAmount">0.5</item>
     </style>
 
+    <style name="Theme.App.Modal" parent="Theme.AppCompat.Dialog">
+        <!-- 배경 투명도 조절 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@android:color/transparent</item>
+        <!-- 모달 창의 크기 조절 -->
+        <item name="android:windowMinWidthMajor">280dp</item>
+        <item name="android:windowMinWidthMinor">280dp</item>
+    </style>
+
+
 </resources>

@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ public class MapActivity extends AppCompatActivity {
     private Button coordinateSelectButton;
     private Button resetButton; // 초기화 버튼
     private Button gpsButton; // GPS 버튼
+    private Button btnRedulated;// 규제지역 버튼
     private List<Marker> markers; // 사용자가 추가한 마커 리스트
     private List<Marker> gpsMarkers; // GPS로 추가한 마커 리스트
     private boolean isFollowingLocation = false; // 사용자에 의해 화면이 위치를 따라갈지 결정
@@ -82,8 +85,10 @@ public class MapActivity extends AppCompatActivity {
         gpsButton = findViewById(R.id.gps);
         btnShowDialog = findViewById(R.id.btnShowDialog);
         btnShowList = findViewById(R.id.enteredPoint);
+        btnRedulated = findViewById(R.id.redulated);
         markers = new ArrayList<>();
         gpsMarkers = new ArrayList<>();
+
     }
 
     private void initializeLocationServices() {
@@ -164,6 +169,12 @@ public class MapActivity extends AppCompatActivity {
             showEvaluationDialog();
         });
 
+        btnRedulated.setOnClickListener(v ->{
+            Log.d("EvaluationFindAllActivity", "규제지역 버튼 클릭됨");
+            Intent intent = new Intent(MapActivity.this, RegulatedArea.class);
+            startActivity(intent);
+        });
+
         btnShowList.setOnClickListener(v -> {
             Log.d("btnShowList", "평가입력 버튼 클릭됨");
             Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
@@ -234,9 +245,17 @@ public class MapActivity extends AppCompatActivity {
 
     private void toggleMarkerMode() {
         isMarkerEnabled = !isMarkerEnabled;
-        coordinateSelectButton.setText(isMarkerEnabled ? "선택해제" : "좌표선택");
+        if (isMarkerEnabled) {
+            coordinateSelectButton.setText("선택해제");
+            coordinateSelectButton.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
+        } else {
+            coordinateSelectButton.setText("좌표선택");
+            coordinateSelectButton.setTextColor(getResources().getColor(android.R.color.white));
+        }
         Toast.makeText(this, isMarkerEnabled ? "마커 추가 모드 활성화" : "마커 추가 모드 비활성화", Toast.LENGTH_SHORT).show();
     }
+
+
 
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
@@ -333,7 +352,11 @@ public class MapActivity extends AppCompatActivity {
 
     private void showEvaluatorNameDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("이름 입력");
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View customTitleView = inflater.inflate(R.layout.register_name_title, null);
+
+        builder.setCustomTitle(customTitleView);
 
         final EditText input = new EditText(this);
         input.setFilters(new InputFilter[]{new KoreanInputFilter()}); // 한글 입력만 가능하도록 설정
@@ -349,8 +372,8 @@ public class MapActivity extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("취소", (dialog, which) -> dialog.cancel());
-
-        builder.show();
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 }
