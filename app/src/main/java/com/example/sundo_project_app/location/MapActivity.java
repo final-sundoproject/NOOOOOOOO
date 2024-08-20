@@ -48,21 +48,19 @@ public class MapActivity extends AppCompatActivity {
     private Button coordinateSelectButton;
     private Button resetButton; // 초기화 버튼
     private Button gpsButton; // GPS 버튼
-    private Button btnRedulated;// 규제지역 버튼
+    private Button btnRedulated; // 규제지역 버튼
+    private Button btnShowDialog;
+    private Button btnShowList;
     private List<Marker> markers; // 사용자가 추가한 마커 리스트
     private List<Marker> gpsMarkers; // GPS로 추가한 마커 리스트
     private boolean isFollowingLocation = false; // 사용자에 의해 화면이 위치를 따라갈지 결정
-
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
     private Handler handler; // Handler를 사용하여 주기적으로 작업 수행
     private Runnable locationUpdateRunnable; // 위치 업데이트를 주기적으로 수행하는 Runnable
     private static final long LOCATION_UPDATE_INTERVAL = 10000; // 10초 간격
     private static final long LOCATION_UPDATE_FASTEST_INTERVAL = 5000; // 5초 간격
-    private Button btnShowDialog;
-    private Button btnShowList;
     private String projectId;
-
     private Project currentProject;
     private String registerName;
 
@@ -88,7 +86,7 @@ public class MapActivity extends AppCompatActivity {
         btnRedulated = findViewById(R.id.redulated);
         markers = new ArrayList<>();
         gpsMarkers = new ArrayList<>();
-
+        updateShowListButtonState(); // 초기 상태로 버튼 업데이트
     }
 
     private void initializeLocationServices() {
@@ -169,7 +167,7 @@ public class MapActivity extends AppCompatActivity {
             showEvaluationDialog();
         });
 
-        btnRedulated.setOnClickListener(v ->{
+        btnRedulated.setOnClickListener(v -> {
             Log.d("EvaluationFindAllActivity", "규제지역 버튼 클릭됨");
             Intent intent = new Intent(MapActivity.this, RegulatedArea.class);
             startActivity(intent);
@@ -178,6 +176,7 @@ public class MapActivity extends AppCompatActivity {
         btnShowList.setOnClickListener(v -> {
             Log.d("btnShowList", "평가입력 버튼 클릭됨");
             Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
+            // 필요한 데이터 전달
             startActivity(intent);
         });
 
@@ -236,6 +235,7 @@ public class MapActivity extends AppCompatActivity {
         });
 
         Toast.makeText(MapActivity.this, "Clicked Location: " + latLng.latitude + ", " + latLng.longitude, Toast.LENGTH_SHORT).show();
+        updateShowListButtonState(); // 마커 추가 후 버튼 상태 업데이트
     }
 
     private void showEvaluationDialog() {
@@ -254,8 +254,6 @@ public class MapActivity extends AppCompatActivity {
         }
         Toast.makeText(this, isMarkerEnabled ? "마커 추가 모드 활성화" : "마커 추가 모드 비활성화", Toast.LENGTH_SHORT).show();
     }
-
-
 
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
@@ -299,7 +297,6 @@ public class MapActivity extends AppCompatActivity {
         gpsMarkers.add(gpsMarker);
     }
 
-
     private void startTrackingLocation() {
         if (!isFollowingLocation) {
             isFollowingLocation = true;
@@ -331,6 +328,16 @@ public class MapActivity extends AppCompatActivity {
         gpsButton.setText("GPS");
         stopLocationUpdates();
         isFollowingLocation = false;
+
+        updateShowListButtonState(); // 초기 상태로 버튼 업데이트
+    }
+
+    private void updateShowListButtonState() {
+        if (markers.isEmpty()) {
+            btnShowList.setEnabled(false);
+        } else {
+            btnShowList.setEnabled(true);
+        }
     }
 
     private void requestLocationPermissions() {
