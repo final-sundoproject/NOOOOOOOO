@@ -36,6 +36,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -87,9 +91,11 @@ public class EvaluationActivity extends AppCompatActivity {
 
         if (currentProject != null) {
             textViewName.setText(currentProject.getProjectName());
-            viewDate.setText(currentProject.getRegistrationDate());
+            viewDate.setText(getCurrentDateTime());
             textViewObserver.setText(registerName);
         }
+
+
 
         seekBars = new SeekBar[]{
                 findViewById(R.id.seekBar1),
@@ -112,6 +118,11 @@ public class EvaluationActivity extends AppCompatActivity {
 
         ImageView imageViewMain = findViewById(R.id.imageViewMain);
         imageViewMain.setOnClickListener(v -> openImagePicker());
+    }
+
+    public String getCurrentDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return sdf.format(new Date());
     }
 
     @Override
