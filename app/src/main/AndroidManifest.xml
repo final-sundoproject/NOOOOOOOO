@@ -104,10 +104,9 @@
 
         <activity
             android:name=".location.DdActivity"
-            android:exported="true"
-            android:theme="@style/Theme.App.Modal">
-            <!-- intent-filter 제거 -->
+            android:theme="@style/Theme.AppCompat.Dialog">
         </activity>
+
 
         <activity
             android:name=".location.GeneratorActivity"

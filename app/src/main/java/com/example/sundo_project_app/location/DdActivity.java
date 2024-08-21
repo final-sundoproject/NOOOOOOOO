@@ -1,21 +1,17 @@
 package com.example.sundo_project_app.location;
 
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sundo_project_app.R;
-import com.example.sundo_project_app.evaluation.EvaluationActivity;
 
 import org.json.JSONObject;
 
@@ -28,7 +24,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class DdActivity extends AppCompatActivity {
+public class DdActivity extends Activity {
 
     private static final double MIN_LATITUDE = -90.0;
     private static final double MAX_LATITUDE = 90.0;
@@ -45,25 +41,16 @@ public class DdActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showDialog();
-    }
+        setContentView(R.layout.dialog_dd_input); // 다이얼로그 레이아웃 설정
 
-    private void showDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_dd_input);
-        dialog.setCancelable(false); // 다이얼로그 외부를 클릭해도 닫히지 않도록 설정
-        dialog.setCanceledOnTouchOutside(false); // 다이얼로그 외부를 클릭해도 닫히지 않도록 설정
 
-        // Initialize views
-        EditText etLatitude = dialog.findViewById(R.id.et_latitude);
-        EditText etLongitude = dialog.findViewById(R.id.et_longitude);
-        Button btnSubmit = dialog.findViewById(R.id.btn_submit);
-        TextView btnClose = dialog.findViewById(R.id.btn_close);
+        // UI 요소 초기화
+        EditText etLatitude = findViewById(R.id.et_latitude);
+        EditText etLongitude = findViewById(R.id.et_longitude);
+        Button btnSubmit = findViewById(R.id.btn_submit);
+        TextView btnClose = findViewById(R.id.btn_close);
 
-        // Set up close button
-        btnClose.setOnClickListener(v -> dialog.dismiss());
-
-        // Handle Intent data
+        // Intent로부터 데이터 추출
         Intent intent = getIntent();
         double latitude = intent.getDoubleExtra("latitude", 0);
         double longitude = intent.getDoubleExtra("longitude", 0);
@@ -71,15 +58,19 @@ public class DdActivity extends AppCompatActivity {
         currentProject = intent.getSerializableExtra("currentProject");
         registerName = intent.getStringExtra("registerName");
 
+        // 데이터 로그 출력
         Log.d(TAG, "currentProject: " + currentProject);
         Log.d(TAG, "registerName: " + registerName);
 
+        // 입력 필드에 초기값 설정
         etLatitude.setText(String.valueOf(latitude));
         etLongitude.setText(String.valueOf(longitude));
 
-        btnSubmit.setOnClickListener(v -> handleSubmit(etLatitude, etLongitude));
+        // 닫기 버튼 클릭 리스너
+        btnClose.setOnClickListener(v -> finish());
 
-        dialog.show();
+        // 제출 버튼 클릭 리스너
+        btnSubmit.setOnClickListener(v -> handleSubmit(etLatitude, etLongitude));
     }
 
     private void handleSubmit(EditText etLatitude, EditText etLongitude) {
@@ -87,6 +78,7 @@ public class DdActivity extends AppCompatActivity {
             double latitude = Double.parseDouble(etLatitude.getText().toString());
             double longitude = Double.parseDouble(etLongitude.getText().toString());
 
+            // 유효성 검사
             if (latitude < MIN_LATITUDE || latitude > MAX_LATITUDE) {
                 showToast("Latitude must be between " + MIN_LATITUDE + " and " + MAX_LATITUDE + ".");
                 return;
@@ -97,6 +89,7 @@ public class DdActivity extends AppCompatActivity {
                 return;
             }
 
+            // JSON 데이터 생성
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("latitude", latitude);
             jsonObject.put("longitude", longitude);
@@ -106,6 +99,7 @@ public class DdActivity extends AppCompatActivity {
                 jsonObject.put("projectId", projectId);
             }
 
+            // 서버로 데이터 전송
             sendCoordinates(jsonObject.toString());
 
         } catch (NumberFormatException e) {
@@ -133,11 +127,13 @@ public class DdActivity extends AppCompatActivity {
                 connection.setRequestProperty("Content-Type", "application/json; utf-8");
                 connection.setDoOutput(true);
 
+                // 데이터 전송
                 try (OutputStream os = connection.getOutputStream()) {
                     byte[] input = jsonData.getBytes("utf-8");
                     os.write(input, 0, input.length);
                 }
 
+                // 서버 응답 처리
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
