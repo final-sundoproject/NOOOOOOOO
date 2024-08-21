@@ -113,10 +113,11 @@ public class LoginActivity extends AppCompatActivity {
                     long companyCode = extractCompanyCodeFromResponse(responseBody);
 
                     if (autoLoginCheckbox.isChecked()) {
-                        saveToken(token, companyName, companyCode);
+                        saveToken(token, companyName);
                     }
 
                     runOnUiThread(() -> {
+                        saveToken(token,companyName);
                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, AddbusinessActivity.class);
                         intent.putExtra("token", token);
@@ -133,12 +134,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void saveToken(String token, String companyName, long companyCode) {
+    private void saveToken(String token, String companyName) {
         SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("token", token);
         editor.putString("companyName", companyName);
-        editor.putLong("companyCode", companyCode); // 회사 코드도 저장
         editor.putBoolean("auto_login", autoLoginCheckbox.isChecked()); // 자동 로그인 체크박스 상태 저장
         editor.apply();
         Log.d("SaveToken", "Token saved: " + token);
