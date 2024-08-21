@@ -6,6 +6,8 @@
     <color name="green">#49DE4F</color>
     <color name="sundo_green_light">#D4F1D4</color>
     <color name="sundo_green_dark">#40895B</color>
+    <color name="choose_wind_power">#e0e0e0</color>
     <color name="primaryColor">#6200EE</color>  <!-- 보라색 계열 -->
     <color name="secondaryColor">#03DAC5</color> <!-- 청록색 계열 -->
+    <color name="transparent">#00000000</color>
 </resources>

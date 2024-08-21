@@ -15,6 +15,7 @@
         android:id="@+id/btn_allow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#40895B"
         android:text="권한 허용"
         android:layout_below="@id/permissionExplanation"
         android:layout_marginTop="16dp"/>
@@ -23,6 +24,7 @@
         android:id="@+id/btn_deny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#e0e0e0"
         android:text="권한 거부"
         android:layout_below="@id/btn_allow"
         android:layout_marginTop="8dp"/>

@@ -37,7 +37,7 @@ public class DmsActivity extends AppCompatActivity {
     private String projectId; // projectId를 멤버 변수로 선언
 
     private static final String TAG = "DmsActivity";
-    private static final String SERVER_URL = "http://10.0.2.2:8000/location"; // 변경할 서버 URL
+    private static final String SERVER_URL = "http://172.30.1.94:8000/location"; // 변경할 서버 URL
 
     // locationId 변수를 멤버 변수로 선언
     private String locationId;

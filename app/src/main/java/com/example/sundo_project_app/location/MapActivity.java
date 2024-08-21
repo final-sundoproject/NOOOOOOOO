@@ -2,12 +2,15 @@ package com.example.sundo_project_app.location;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +22,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
 import com.example.sundo_project_app.project.model.Project;
+import com.example.sundo_project_app.regulatedArea.RegulatedArea;
 import com.example.sundo_project_app.utill.KoreanInputFilter;
+import com.example.sundo_project_app.utill.toolBarActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -39,7 +45,7 @@ import com.naver.maps.map.overlay.Marker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity  {
 
     private NaverMap naverMap;
     private boolean isMarkerEnabled = false; // 마커 추가 모드 상태
@@ -58,7 +64,11 @@ public class MapActivity extends AppCompatActivity {
     private Runnable locationUpdateRunnable; // 위치 업데이트를 주기적으로 수행하는 Runnable
     private static final long LOCATION_UPDATE_INTERVAL = 10000; // 10초 간격
     private static final long LOCATION_UPDATE_FASTEST_INTERVAL = 5000; // 5초 간격
+    private Button btnShowDialog;
+    private Button btnShowList;
     private String projectId;
+
+
     private Project currentProject;
     private String registerName;
 
@@ -84,6 +94,7 @@ public class MapActivity extends AppCompatActivity {
         btnRedulated = findViewById(R.id.redulated);
         markers = new ArrayList<>();
         gpsMarkers = new ArrayList<>();
+
         updateShowListButtonState(); // 초기 상태로 버튼 업데이트
     }
 
@@ -178,6 +189,8 @@ public class MapActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(MapActivity.this, "하나의 마커만 추가해 주세요.", Toast.LENGTH_SHORT).show();
             }
+            Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
+            startActivity(intent);
         });
 
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
@@ -236,6 +249,7 @@ public class MapActivity extends AppCompatActivity {
 
         Toast.makeText(MapActivity.this, "Clicked Location: " + latLng.latitude + ", " + latLng.longitude, Toast.LENGTH_SHORT).show();
         updateShowListButtonState(); // 마커 추가 후 버튼 상태 업데이트
+
     }
 
     private void showEvaluationDialog() {
@@ -281,6 +295,7 @@ public class MapActivity extends AppCompatActivity {
                     if (location != null) {
                         updateCurrentLocationOnMap(location);
                         Toast.makeText(MapActivity.this, "위도 : " + location.getLatitude() +" , "+ "경도 :" + location.getLongitude(),Toast.LENGTH_SHORT).show();
+
                     } else {
                         Toast.makeText(MapActivity.this, "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
                     }
@@ -352,6 +367,7 @@ public class MapActivity extends AppCompatActivity {
         } else {
             btnShowList.setEnabled(false);
         }
+
     }
 
     private void requestLocationPermissions() {
@@ -377,10 +393,31 @@ public class MapActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         View customTitleView = inflater.inflate(R.layout.register_name_title, null);
 
+
+
         builder.setCustomTitle(customTitleView);
 
         final EditText input = new EditText(this);
-        input.setFilters(new InputFilter[]{new KoreanInputFilter()}); // 한글 입력만 가능하도록 설정
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                if (!text.matches("[ㄱ-ㅎ가-힣]*")) {
+                    Toast.makeText(MapActivity.this, "한글만 입력 가능합니다.", Toast.LENGTH_SHORT).show();
+                    s.delete(s.length() - 1, s.length());
+                }
+            }
+        });
+
+
         builder.setView(input);
 
         builder.setPositiveButton("확인", (dialog, which) -> {
