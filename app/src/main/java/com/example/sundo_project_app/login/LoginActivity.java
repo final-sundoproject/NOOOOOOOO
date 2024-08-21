@@ -47,8 +47,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private Long companyCode;
 
-    private static final String LOGIN_URL = "http://10.0.2.2:8000/api/companies/login"; // 서버의 로그인 엔드포인트
-    private static final String VALIDATE_TOKEN_URL = "http://10.0.2.2:8000/api/validate-token"; // 서버의 토큰 검증 엔드포인트
+    private static final String LOGIN_URL = "http://10.0.2.2:8080/api/companies/login"; // 서버의 로그인 엔드포인트
+    private static final String VALIDATE_TOKEN_URL = "http://10.0.2.2:8080/api/validate-token"; // 서버의 토큰 검증 엔드포인트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
