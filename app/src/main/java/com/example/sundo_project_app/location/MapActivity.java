@@ -2,7 +2,6 @@ package com.example.sundo_project_app.location;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -23,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.sundo_project_app.R;
-import com.example.sundo_project_app.evaluation.EvaluationActivity;
 import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
 import com.example.sundo_project_app.project.model.Project;
 import com.example.sundo_project_app.utill.KoreanInputFilter;
@@ -175,9 +173,11 @@ public class MapActivity extends AppCompatActivity {
 
         btnShowList.setOnClickListener(v -> {
             Log.d("btnShowList", "평가입력 버튼 클릭됨");
-            Intent intent = new Intent(MapActivity.this, EvaluationActivity.class);
-            // 필요한 데이터 전달
-            startActivity(intent);
+            if (markers.size() >= 1) {
+                showEvaluationPromptDialog(); // 모달 창을 띄우는 메서드 호출
+            } else {
+                Toast.makeText(MapActivity.this, "하나의 마커만 추가해 주세요.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         findViewById(R.id.coordinateInput).setOnClickListener(v -> {
@@ -241,6 +241,20 @@ public class MapActivity extends AppCompatActivity {
     private void showEvaluationDialog() {
         EvaluationDialogFragment dialog = new EvaluationDialogFragment();
         dialog.show(getSupportFragmentManager(), "EvaluationDialog");
+    }
+
+    private void showEvaluationPromptDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("평가 입력");
+        builder.setMessage("평가를 입력할 마크업을 선택해주세요.");
+
+        builder.setNegativeButton("확인", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     private void toggleMarkerMode() {
@@ -333,8 +347,7 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void updateShowListButtonState() {
-        // Enable the button if there is exactly one marker
-        if (markers.size() == 1) {
+        if (markers.size() >= 1) {
             btnShowList.setEnabled(true);
         } else {
             btnShowList.setEnabled(false);
