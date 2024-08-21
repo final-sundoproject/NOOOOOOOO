@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +23,6 @@ import com.example.sundo_project_app.location.MapActivity;
 import com.example.sundo_project_app.project.api.ProjectApi;
 import com.example.sundo_project_app.project.model.Project;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,26 +39,42 @@ public class AddbusinessActivity extends AppCompatActivity {
     private List<Project> projectList = new ArrayList<>();
     private ProjectApi apiService;
     private Long companyCode;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
-
     private String token;
 
+
     private TextView noResultsTextView;
+
+    private String companyName;
+    private TextView userNameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_business);
 
-        // Intent에서 companyCode를 가져옴
+        // Toolbar 설정
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+
+        // 사용자 이름 설정
+        userNameTextView = findViewById(R.id.userNameTextView);
+
         Intent intent = getIntent();
         companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정
         token = intent.getStringExtra("token");
+        companyName = intent.getStringExtra("companyName");
         if (companyCode == -1) {
             Log.d("companyCode: {}, " , String.valueOf(companyCode));
             Log.d("token: {}, " , String.valueOf(token));
             Toast.makeText(this, "유효하지 않은 회사 코드입니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        Log.d("AddbusinessActivity", "Received companyCode: " + companyCode);
+        Log.d("AddbusinessActivity", "Received token: " + (token != null ? token : "null"));
+        Log.d("AddbusinessActivity", "Received companyName: " + (companyName != null ? companyName : "null"));
+
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -71,7 +87,7 @@ public class AddbusinessActivity extends AppCompatActivity {
         recyclerView.setAdapter(projectAdapter);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.30.1.44:8000/") // 서버의 기본 URL (에뮬레이터에서는 localhost가 10.0.2.2로 매핑됨)
+                .baseUrl("http://172.30.1.94:8000/") // 서버의 기본 URL (에뮬레이터에서는 localhost가 10.0.2.2로 매핑됨)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -104,6 +120,10 @@ public class AddbusinessActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
+
+        if (companyName != null) {
+            userNameTextView.setText(companyName);
+        }
 
 
     }

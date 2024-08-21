@@ -8,7 +8,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -170,7 +172,7 @@ public class MapActivity extends AppCompatActivity {
             showEvaluationDialog();
         });
 
-        btnRedulated.setOnClickListener(v ->{
+        btnRedulated.setOnClickListener(v -> {
             Log.d("EvaluationFindAllActivity", "규제지역 버튼 클릭됨");
             Intent intent = new Intent(MapActivity.this, RegulatedArea.class);
             startActivity(intent);
@@ -257,7 +259,6 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
         if (!hasLocationPermissions()) {
@@ -269,7 +270,7 @@ public class MapActivity extends AppCompatActivity {
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
                         updateCurrentLocationOnMap(location);
-                        Toast.makeText(MapActivity.this, "위도 : " + location.getLatitude() +" , "+ "경도 :" + location.getLongitude(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapActivity.this, "위도 : " + location.getLatitude() + " , " + "경도 :" + location.getLongitude(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(MapActivity.this, "위치를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
                     }
@@ -306,7 +307,7 @@ public class MapActivity extends AppCompatActivity {
             isFollowingLocation = true;
             gpsButton.setText("중지");
             getCurrentLocation();
-            Toast.makeText(MapActivity.this, "위치 추적 시작" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(MapActivity.this, "위치 추적 시작", Toast.LENGTH_SHORT).show();
 
         } else {
             isFollowingLocation = false;
@@ -360,7 +361,25 @@ public class MapActivity extends AppCompatActivity {
         builder.setCustomTitle(customTitleView);
 
         final EditText input = new EditText(this);
-        input.setFilters(new InputFilter[]{new KoreanInputFilter()}); // 한글 입력만 가능하도록 설정
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                if (!text.matches("[ㄱ-ㅎ가-힣]*")) {
+                    Toast.makeText(MapActivity.this, "한글만 입력 가능합니다.", Toast.LENGTH_SHORT).show();
+                    s.delete(s.length() - 1, s.length());
+                }
+            }
+        });
+
         builder.setView(input);
 
         builder.setPositiveButton("확인", (dialog, which) -> {

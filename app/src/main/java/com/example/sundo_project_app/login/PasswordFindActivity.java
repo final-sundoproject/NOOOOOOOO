@@ -29,7 +29,7 @@ public class PasswordFindActivity extends AppCompatActivity {
     private Button passwordFindButton;
     private TextView passwordCheckTextView;
 
-    private static final String PASSWORD_FIND_URL = "http://172.30.1.44:8000/api/companies/find-password";
+    private static final String PASSWORD_FIND_URL = "http://172.30.1.94:8000/api/companies/find-password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
