@@ -4,6 +4,12 @@
     android:background="#D4F1D4"
     android:padding="16dp">
 
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
     <!-- 사업명 입력 필드 -->
     <EditText
         android:id="@+id/searchBar"

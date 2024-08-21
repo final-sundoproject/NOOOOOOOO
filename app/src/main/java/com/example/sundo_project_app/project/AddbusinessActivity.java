@@ -22,6 +22,7 @@ import com.example.sundo_project_app.R;
 import com.example.sundo_project_app.location.MapActivity;
 import com.example.sundo_project_app.project.api.ProjectApi;
 import com.example.sundo_project_app.project.model.Project;
+import com.example.sundo_project_app.utill.toolBarActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AddbusinessActivity extends AppCompatActivity {
+public class AddbusinessActivity extends toolBarActivity {
 
     private RecyclerView recyclerView;
     private ProjectAdapter projectAdapter;
@@ -51,9 +52,6 @@ public class AddbusinessActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_business);
-
-        // 사용자 이름 설정
-        userNameTextView = findViewById(R.id.userNameTextView);
 
         Intent intent = getIntent();
         companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정

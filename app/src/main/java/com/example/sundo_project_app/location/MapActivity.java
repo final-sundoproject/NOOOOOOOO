@@ -30,6 +30,7 @@ import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
 import com.example.sundo_project_app.project.model.Project;
 import com.example.sundo_project_app.regulatedArea.RegulatedArea;
 import com.example.sundo_project_app.utill.KoreanInputFilter;
+import com.example.sundo_project_app.utill.toolBarActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -44,7 +45,7 @@ import com.naver.maps.map.overlay.Marker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends toolBarActivity {
 
     private NaverMap naverMap;
     private boolean isMarkerEnabled = false; // 마커 추가 모드 상태
@@ -73,6 +74,8 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+
+
 
         showEvaluatorNameDialog(); // 평가자 이름 입력 대화 상자 표시
         initializeViews();
