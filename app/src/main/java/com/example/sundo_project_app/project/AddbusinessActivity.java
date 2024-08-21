@@ -54,6 +54,13 @@ public class AddbusinessActivity extends toolBarActivity {
 
         userNameTextView = findViewById(R.id.userNameTextView);
 
+        if (userNameTextView != null) {
+            userNameTextView.setText(companyName != null ? companyName : "No Company");
+        } else {
+            Log.e("MapActivity", "TextView with ID userNameTextView not found.");
+        }
+
+
         // Intent에서 데이터 가져오기
         Intent intent = getIntent();
         companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정
@@ -64,14 +71,7 @@ public class AddbusinessActivity extends toolBarActivity {
         Log.d("AddbusinessActivity", "Received companyCode: " + companyCode);
         Log.d("AddbusinessActivity", "Received token: " + (token != null ? token : "null"));
         Log.d("AddbusinessActivity", "Received companyName: " + (companyName != null ? companyName : "null"));
-
-        // TextView에 companyName 설정
-        if (userNameTextView != null) {
-            userNameTextView.setText(companyName != null ? companyName : "No Company");
-        } else {
-            Log.e("AddbusinessActivity", "TextView with ID userNameTextView not found.");
-        }
-
+        
         if (companyCode == -1) {
             Log.d("companyCode: {}, ", String.valueOf(companyCode));
             Log.d("token: {}, ", String.valueOf(token));

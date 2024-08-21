@@ -46,7 +46,7 @@ import com.naver.maps.map.overlay.Marker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends toolBarActivity {
+public class MapActivity extends AppCompatActivity  {
 
     private NaverMap naverMap;
     private boolean isMarkerEnabled = false; // 마커 추가 모드 상태
@@ -75,19 +75,6 @@ public class MapActivity extends toolBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
-
-        userNameTextView = findViewById(R.id.userNameTextView);
-
-        if (userNameTextView != null) {
-            userNameTextView.setText(companyName != null ? companyName : "No Company");
-        } else {
-            Log.e("MapActivity", "TextView with ID userNameTextView not found.");
-        }
-
 
         showEvaluatorNameDialog(); // 평가자 이름 입력 대화 상자 표시
         initializeViews();
