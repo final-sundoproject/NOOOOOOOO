@@ -2,7 +2,6 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://repository.map.naver.com/archive/maven" }
     }
 }
 
@@ -10,8 +9,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://repository.map.naver.com/archive/maven" }
     }
 }
+
 rootProject.name = "sundo_project_app"
-include ":app",":unityLibrary"
+include ":app"
+include ":unityLibrary"
+include ":unityLibrary:xrmanifest.androidlib"
+include ":unityLibrary:mobilenotifications.androidlib"

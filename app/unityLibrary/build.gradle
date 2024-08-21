@@ -1,15 +1,13 @@
 apply plugin: 'com.android.library'
 
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation(name: 'arcore_client', ext:'aar')
     implementation(name: 'UnityARCore', ext:'aar')
     implementation(name: 'ARPresto', ext:'aar')
     implementation(name: 'unityandroidpermissions', ext:'aar')
-    implementation project('xrmanifest.androidlib')
-    implementation project('mobilenotifications.androidlib')
-
+    implementation project(':unityLibrary:xrmanifest.androidlib')
+    implementation project(':unityLibrary:mobilenotifications.androidlib')
 }
 
 android {
@@ -91,12 +89,22 @@ def BuildIl2Cpp(String workingDir, String configuration, String architecture, St
     delete workingDir + "/src/main/jniLibs/" + abi + "/libil2cpp.sym.so"
     ant.move(file: workingDir + "/src/main/jniLibs/" + abi + "/libil2cpp.dbg.so", tofile: workingDir + "/symbols/" + abi + "/libil2cpp.so")
 }
+android {
+    // 기타 설정...
+
+    variantFilter { variant ->
+        def names = variant.getFlavors()*.name
+        if (names.contains("yourFlavorName")) {
+            variant.setIgnore(true)
+        }
+    }
+}
 
 android {
     task BuildIl2CppTask {
         doLast {
-              BuildIl2Cpp(projectDir.toString().replaceAll('\\\\', '/'), 'Release', 'armv7', 'armeabi-v7a', [  ] as String[]);
-              BuildIl2Cpp(projectDir.toString().replaceAll('\\\\', '/'), 'Release', 'arm64', 'arm64-v8a', [  ] as String[]);
+            BuildIl2Cpp(projectDir.toString().replaceAll('\\\\', '/'), 'Release', 'armv7', 'armeabi-v7a', [  ] as String[]);
+            BuildIl2Cpp(projectDir.toString().replaceAll('\\\\', '/'), 'Release', 'arm64', 'arm64-v8a', [  ] as String[]);
         }
     }
     afterEvaluate {
@@ -111,6 +119,3 @@ android {
         }
     }
 }
-
-
-
