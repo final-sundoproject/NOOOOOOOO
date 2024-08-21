@@ -333,10 +333,11 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void updateShowListButtonState() {
-        if (markers.isEmpty()) {
-            btnShowList.setEnabled(false);
-        } else {
+        // Enable the button if there is exactly one marker
+        if (markers.size() == 1) {
             btnShowList.setEnabled(true);
+        } else {
+            btnShowList.setEnabled(false);
         }
     }
 
