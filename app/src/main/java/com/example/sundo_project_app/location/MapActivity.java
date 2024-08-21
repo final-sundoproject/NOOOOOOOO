@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.example.sundo_project_app.R;
@@ -75,6 +76,17 @@ public class MapActivity extends toolBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+
+        userNameTextView = findViewById(R.id.userNameTextView);
+
+        if (userNameTextView != null) {
+            userNameTextView.setText(companyName != null ? companyName : "No Company");
+        } else {
+            Log.e("MapActivity", "TextView with ID userNameTextView not found.");
+        }
 
 
         showEvaluatorNameDialog(); // 평가자 이름 입력 대화 상자 표시

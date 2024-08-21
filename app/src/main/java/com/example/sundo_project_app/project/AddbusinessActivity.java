@@ -41,40 +41,48 @@ public class AddbusinessActivity extends toolBarActivity {
     private ProjectApi apiService;
     private Long companyCode;  // 회사 코드, 필요에 따라 변경하거나 동적으로 설정
     private String token;
-
-
     private TextView noResultsTextView;
-
-    private String companyName;
-    private TextView userNameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_business);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+
+        userNameTextView = findViewById(R.id.userNameTextView);
+
+        // Intent에서 데이터 가져오기
         Intent intent = getIntent();
         companyCode = intent.getLongExtra("companyCode", -1); // 기본값 -1로 설정
         token = intent.getStringExtra("token");
         companyName = intent.getStringExtra("companyName");
-        if (companyCode == -1) {
-            Log.d("companyCode: {}, " , String.valueOf(companyCode));
-            Log.d("token: {}, " , String.valueOf(token));
-            Toast.makeText(this, "유효하지 않은 회사 코드입니다.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
+        // 데이터 확인
         Log.d("AddbusinessActivity", "Received companyCode: " + companyCode);
         Log.d("AddbusinessActivity", "Received token: " + (token != null ? token : "null"));
         Log.d("AddbusinessActivity", "Received companyName: " + (companyName != null ? companyName : "null"));
 
+        // TextView에 companyName 설정
+        if (userNameTextView != null) {
+            userNameTextView.setText(companyName != null ? companyName : "No Company");
+        } else {
+            Log.e("AddbusinessActivity", "TextView with ID userNameTextView not found.");
+        }
+
+        if (companyCode == -1) {
+            Log.d("companyCode: {}, ", String.valueOf(companyCode));
+            Log.d("token: {}, ", String.valueOf(token));
+            Toast.makeText(this, "유효하지 않은 회사 코드입니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            return; // 데이터가 유효하지 않을 경우 Activity 종료
+        }
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         noResultsTextView = findViewById(R.id.noResultsTextView);
-
-//        projectAdapter = new ProjectAdapter(projectList);
-//        recyclerView.setAdapter(projectAdapter);
 
         projectAdapter = new ProjectAdapter(projectList, this::onProjectItemClick);
         recyclerView.setAdapter(projectAdapter);
@@ -113,12 +121,6 @@ public class AddbusinessActivity extends toolBarActivity {
                 // Do nothing
             }
         });
-
-        if (companyName != null) {
-            userNameTextView.setText(companyName);
-        }
-
-
     }
 
     private void updateNoResultsTextView() {
@@ -131,7 +133,7 @@ public class AddbusinessActivity extends toolBarActivity {
 
     private void onProjectItemClick(Project projects) {
         Intent mapIntent = new Intent(AddbusinessActivity.this, MapActivity.class);
-        mapIntent.putExtra("project",projects);
+        mapIntent.putExtra("project", projects);
         mapIntent.putExtra("token", token);
         startActivity(mapIntent);
     }

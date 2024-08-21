@@ -35,15 +35,13 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox autoLoginCheckbox;
     private Button loginButton;
     private Button signUpButton;
-
     private TextView findEmailLink;
     private TextView findPasswordLink;
 
-    private Long companyCode;
-    private String companyName;
+    private static final String LOGIN_URL = "http://172.30.1.94:8000/api/companies/login";
+    private static final String VALIDATE_TOKEN_URL = "http://172.30.1.94:8000/api/validate-token";
 
-    private static final String LOGIN_URL = "http://172.30.1.94:8000/api/companies/login"; // 서버의 로그인 엔드포인트
-    private static final String VALIDATE_TOKEN_URL = "http://172.30.1.94:8000/api/validate-token"; // 서버의 토큰 검증 엔드포인트
+    private String companyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         findEmailLink = findViewById(R.id.findEmailLink);
         findPasswordLink = findViewById(R.id.findPasswordLink);
 
-        // 자동 로그인 설정 확인
         checkAutoLogin();
 
         loginButton.setOnClickListener(view -> {
@@ -73,7 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         signUpButton.setOnClickListener(view -> {
-            // SignUpActivity로 이동
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
@@ -93,11 +89,9 @@ public class LoginActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-        // JSON 객체 생성
         String json = "{\"email\":\"" + email + "\", \"password\":\"" + password + "\"}";
         RequestBody body = RequestBody.create(JSON, json);
 
-        // 서버로 요청 전송
         Request request = new Request.Builder()
                 .url(LOGIN_URL)
                 .post(body)
@@ -116,22 +110,20 @@ public class LoginActivity extends AppCompatActivity {
                     String responseBody = response.body().string();
                     String token = extractTokenFromResponse(responseBody);
                     companyName = extractCompanyNameFromResponse(responseBody);
-                    companyCode = extractCompanyCodeFromResponse(responseBody); // companyCode 추출
+                    long companyCode = extractCompanyCodeFromResponse(responseBody);
 
                     if (autoLoginCheckbox.isChecked()) {
-                        // 자동 로그인 설정을 저장
                         saveToken(token, companyName);
                     }
 
                     runOnUiThread(() -> {
+                        saveToken(token,companyName);
                         Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, AddbusinessActivity.class);
+                        intent.putExtra("token", token);
                         intent.putExtra("companyCode", companyCode);
                         intent.putExtra("companyName", companyName);
 
-                        Log.d("LoginActivity", "Received companyCode: " + companyCode);
-                        Log.d("LoginActivity", "Received token: " + (token != null ? token : "null"));
-                        Log.d("LoginActivity", "Received companyName: " + (companyName != null ? companyName : "null"));
                         startActivity(intent);
                         finish();
                     });
@@ -147,9 +139,10 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("token", token);
         editor.putString("companyName", companyName);
-        editor.putLong("companyCode", companyCode != null ? companyCode : -1);
         editor.putBoolean("auto_login", true);
         editor.apply();
+        Log.d("SaveToken", "Token saved: " + token);
+        Log.d("SaveToken", "Company Name saved: " + companyName);
     }
 
     private void checkAutoLogin() {
@@ -158,12 +151,9 @@ public class LoginActivity extends AppCompatActivity {
         String token = sharedPreferences.getString("token", null);
         long storedCompanyCode = sharedPreferences.getLong("companyCode", -1);
 
-        Log.d("checkAutoLogin", "Stored companyCode: " + storedCompanyCode);
-
         if (autoLogin && token != null && storedCompanyCode != -1) {
             validateToken(token, storedCompanyCode);
         } else {
-            // 로그인 화면의 구성 요소를 활성화하거나 비활성화
             findViewById(R.id.emailInput).setVisibility(View.VISIBLE);
             findViewById(R.id.passwordInput).setVisibility(View.VISIBLE);
             findViewById(R.id.autoLoginCheckbox).setVisibility(View.VISIBLE);
@@ -186,7 +176,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("TokenValidation", "Token validation failed", e);
-                // 토큰 검증 실패: 자동 로그인 해제
                 runOnUiThread(() -> {
                     SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -194,48 +183,41 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putBoolean("auto_login", false);
                     editor.apply();
                     Toast.makeText(LoginActivity.this, "자동 로그인 실패", Toast.LENGTH_SHORT).show();
-                    // 로그인 화면으로 이동
                     findViewById(R.id.emailInput).setVisibility(View.VISIBLE);
                     findViewById(R.id.passwordInput).setVisibility(View.VISIBLE);
                     findViewById(R.id.autoLoginCheckbox).setVisibility(View.VISIBLE);
                     findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
                     findViewById(R.id.signupButton).setVisibility(View.VISIBLE);
                     findViewById(R.id.findEmailLink).setVisibility(View.VISIBLE);
-                    autoLoginCheckbox.setChecked(false); // 자동 로그인 체크박스 해제
+                    autoLoginCheckbox.setChecked(false);
                 });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseBody = response.body().string();
-                Log.d("TokenValidation", "Response body: " + responseBody);
-
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        // 토큰 검증 성공: AddbusinessActivity로 이동
                         Intent intent = new Intent(LoginActivity.this, AddbusinessActivity.class);
                         intent.putExtra("token", token);
                         intent.putExtra("companyCode", companyCode);
                         intent.putExtra("companyName", companyName);
-                        Log.d("token success", token);
                         startActivity(intent);
                         finish();
                     } else {
-                        // 토큰 검증 실패: 자동 로그인 해제
                         SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.remove("token");
                         editor.putBoolean("auto_login", false);
                         editor.apply();
                         Toast.makeText(LoginActivity.this, "자동 로그인 실패", Toast.LENGTH_SHORT).show();
-                        // 로그인 화면의 구성 요소를 활성화
                         findViewById(R.id.emailInput).setVisibility(View.VISIBLE);
                         findViewById(R.id.passwordInput).setVisibility(View.VISIBLE);
                         findViewById(R.id.autoLoginCheckbox).setVisibility(View.VISIBLE);
                         findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
                         findViewById(R.id.signupButton).setVisibility(View.VISIBLE);
                         findViewById(R.id.findEmailLink).setVisibility(View.VISIBLE);
-                        autoLoginCheckbox.setChecked(false); // 자동 로그인 체크박스 해제
+                        autoLoginCheckbox.setChecked(false);
                     }
                 });
             }
@@ -243,7 +225,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private String extractTokenFromResponse(String responseBody) {
-        // JSON 파싱을 사용하여 토큰을 추출
         try {
             JSONObject jsonObject = new JSONObject(responseBody);
             return jsonObject.getString("token");
@@ -254,13 +235,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private long extractCompanyCodeFromResponse(String responseBody) {
-        // JSON 파싱을 사용하여 companyCode를 추출
         try {
             JSONObject jsonObject = new JSONObject(responseBody);
             return jsonObject.getLong("companyCode");
         } catch (JSONException e) {
             e.printStackTrace();
-            return -1; // 기본값으로 잘못된 값을 반환
+            return -1;
         }
     }
 
