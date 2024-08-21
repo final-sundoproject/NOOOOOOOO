@@ -42,6 +42,9 @@ public class LoginActivity extends AppCompatActivity {
     private static final String LOGIN_URL = "http://172.30.1.94:8000/api/companies/login";
     private static final String VALIDATE_TOKEN_URL = "http://172.30.1.94:8000/api/validate-token";
 
+
+    private Long companyCode;
+
     private String companyName;
 
     @Override
