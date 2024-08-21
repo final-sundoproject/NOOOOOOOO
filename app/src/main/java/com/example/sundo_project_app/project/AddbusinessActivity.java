@@ -52,11 +52,6 @@ public class AddbusinessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_business);
 
-        // Toolbar 설정
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
-
         // 사용자 이름 설정
         userNameTextView = findViewById(R.id.userNameTextView);
 
