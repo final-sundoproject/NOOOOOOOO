@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.UnityTechnologies.XR.Manifest">
+
+  <application>
+    <!-- UnityPlayerActivity는 이미 main AndroidManifest에 선언되었으므로 여기서는 추가 설정이 필요하지 않습니다. -->
+  </application>
+
+</manifest>
