@@ -11,6 +11,10 @@ plugins {
 
 allprojects {
     repositories {
+        flatDir {
+            dirs "${project(':unityLibrary').projectDir}/libs"
+        }
+
         google()
         mavenCentral()
         maven { url "https://repository.map.naver.com/archive/maven" }

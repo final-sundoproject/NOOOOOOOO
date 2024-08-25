@@ -2,7 +2,6 @@ package com.example.sundo_project_app.location;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.sundo_project_app.R;
+import com.example.sundo_project_app.Unity3DModelActivity; // Unity3DModelActivity import
 import com.example.sundo_project_app.evaluation.EvaluationActivity;
 import com.example.sundo_project_app.evaluation.EvaluationDialogFragment;
 import com.example.sundo_project_app.project.model.Project;
@@ -52,10 +52,7 @@ public class MapActivity extends AppCompatActivity {
     private Button btnShowDialog;
     private Button btnShowList;
     private String projectId;
-
     private String registerName;
-
-
     private String locationId;
 
     @Override
@@ -78,12 +75,6 @@ public class MapActivity extends AppCompatActivity {
         if (currentProject != null) {
             projectId = currentProject.getProjectId().toString();
         }
-
-        Log.d("projectId", "projectId: " + currentProject.getProjectId().toString());
-        if (currentProject != null) {
-            projectId = currentProject.getProjectId().toString();
-        }
-
 
         TextView projectNameTextView = findViewById(R.id.textBox3);
         if (currentProject != null) {
@@ -158,7 +149,6 @@ public class MapActivity extends AppCompatActivity {
         gpsButton.setOnClickListener(v -> getCurrentLocation());
     }
 
-
     // 평가자 이름 입력 대화 상자 표시
     private void showEvaluatorNameDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -191,7 +181,6 @@ public class MapActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
     private void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
@@ -212,8 +201,8 @@ public class MapActivity extends AppCompatActivity {
                     double markerLatitude = latLng.latitude;
                     double markerLongitude = latLng.longitude;
 
-                    // DdActivity로 좌표 전달
-                    Intent intent = new Intent(MapActivity.this, DdActivity.class);
+                    // Unity3DModelActivity로 좌표 전달
+                    Intent intent = new Intent(MapActivity.this, Unity3DModelActivity.class);
                     intent.putExtra("latitude", markerLatitude);
                     intent.putExtra("longitude", markerLongitude);
                     startActivity(intent);
